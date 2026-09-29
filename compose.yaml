@@ -1,0 +1,104 @@
+services:
+  joomla:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - "${SITE_EXTERNAL_PORT}:80"
+    environment:
+      JOOMLA_SITE_NAME: ${JOOMLA_SITE_NAME}
+      JOOMLA_ADMIN_USER: ${JOOMLA_ADMIN_USER}
+      JOOMLA_ADMIN_USERNAME: ${JOOMLA_ADMIN_USERNAME}
+      JOOMLA_ADMIN_PASSWORD: ${JOOMLA_ADMIN_PASSWORD}
+      JOOMLA_ADMIN_EMAIL: ${JOOMLA_ADMIN_EMAIL}
+      JOOMLA_DB_HOST: ${JOOMLA_DB_HOST}
+      JOOMLA_DB_NAME: ${JOOMLA_DB_NAME}
+      JOOMLA_DB_USER: ${JOOMLA_DB_USER}
+      JOOMLA_DB_PASSWORD: ${JOOMLA_DB_PASSWORD}
+      JOOMLA_DB_TYPE: mysqli
+      JOOMLA_EXTENSIONS_URLS: ${JOOMLA_EXTENSIONS_URLS}
+      JOOMLA_EXTENSIONS_PATHS: ${JOOMLA_EXTENSIONS_PATHS}
+      UPLOAD_MAX_FILESIZE: ${UPLOAD_MAX_FILESIZE:-50M}
+      PHP_IDE_CONFIG: serverName=localhost
+      XDEBUG_CONFIG: client_host=host.docker.internal client_port=${XDEBUG_CLIENT_PORT} idekey=PHPSTORM
+      XDEBUG_MODE: develop,debug
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - ./docker/joomla:/var/www/html
+      # System plugin
+      - ./plugins/system/microschema/microschema.xml:/var/www/html/plugins/system/microschema/microschema.xml
+      - ./plugins/system/microschema/services:/var/www/html/plugins/system/microschema/services
+      - ./plugins/system/microschema/src:/var/www/html/plugins/system/microschema/src
+      - ./plugins/system/microschema/media:/var/www/html/media/plg_system_microschema
+      - ./plugins/system/microschema/language/en-GB/plg_system_microschema.ini:/var/www/html/administrator/language/en-GB/plg_system_microschema.ini
+      - ./plugins/system/microschema/language/en-GB/plg_system_microschema.sys.ini:/var/www/html/administrator/language/en-GB/plg_system_microschema.sys.ini
+      - ./plugins/system/microschema/language/ru-RU/plg_system_microschema.ini:/var/www/html/administrator/language/ru-RU/plg_system_microschema.ini
+      - ./plugins/system/microschema/language/ru-RU/plg_system_microschema.sys.ini:/var/www/html/administrator/language/ru-RU/plg_system_microschema.sys.ini
+      # Content integration plugin
+      - ./plugins/microschema/content/content.xml:/var/www/html/plugins/microschema/content/content.xml
+      - ./plugins/microschema/content/services:/var/www/html/plugins/microschema/content/services
+      - ./plugins/microschema/content/forms:/var/www/html/plugins/microschema/content/forms
+      - ./plugins/microschema/content/src:/var/www/html/plugins/microschema/content/src
+      - ./plugins/microschema/content/language/en-GB/plg_microschema_content.ini:/var/www/html/administrator/language/en-GB/plg_microschema_content.ini
+      - ./plugins/microschema/content/language/en-GB/plg_microschema_content.sys.ini:/var/www/html/administrator/language/en-GB/plg_microschema_content.sys.ini
+      - ./plugins/microschema/content/language/ru-RU/plg_microschema_content.ini:/var/www/html/administrator/language/ru-RU/plg_microschema_content.ini
+      - ./plugins/microschema/content/language/ru-RU/plg_microschema_content.sys.ini:/var/www/html/administrator/language/ru-RU/plg_microschema_content.sys.ini
+      # Contact integration plugin
+      - ./plugins/microschema/contact/contact.xml:/var/www/html/plugins/microschema/contact/contact.xml
+      - ./plugins/microschema/contact/services:/var/www/html/plugins/microschema/contact/services
+      - ./plugins/microschema/contact/forms:/var/www/html/plugins/microschema/contact/forms
+      - ./plugins/microschema/contact/src:/var/www/html/plugins/microschema/contact/src
+      - ./plugins/microschema/contact/language/en-GB/plg_microschema_contact.ini:/var/www/html/administrator/language/en-GB/plg_microschema_contact.ini
+      - ./plugins/microschema/contact/language/en-GB/plg_microschema_contact.sys.ini:/var/www/html/administrator/language/en-GB/plg_microschema_contact.sys.ini
+      - ./plugins/microschema/contact/language/ru-RU/plg_microschema_contact.ini:/var/www/html/administrator/language/ru-RU/plg_microschema_contact.ini
+      - ./plugins/microschema/contact/language/ru-RU/plg_microschema_contact.sys.ini:/var/www/html/administrator/language/ru-RU/plg_microschema_contact.sys.ini
+      # Site module
+      - ./mod_microschema/mod_microschema.xml:/var/www/html/modules/mod_microschema/mod_microschema.xml
+      - ./mod_microschema/services:/var/www/html/modules/mod_microschema/services
+      - ./mod_microschema/src:/var/www/html/modules/mod_microschema/src
+      - ./mod_microschema/tmpl:/var/www/html/modules/mod_microschema/tmpl
+      - ./mod_microschema/media:/var/www/html/media/mod_microschema
+      - ./mod_microschema/language/en-GB/mod_microschema.ini:/var/www/html/language/en-GB/mod_microschema.ini
+      - ./mod_microschema/language/en-GB/mod_microschema.sys.ini:/var/www/html/language/en-GB/mod_microschema.sys.ini
+      - ./mod_microschema/language/ru-RU/mod_microschema.ini:/var/www/html/language/ru-RU/mod_microschema.ini
+      - ./mod_microschema/language/ru-RU/mod_microschema.sys.ini:/var/www/html/language/ru-RU/mod_microschema.sys.ini
+      # Administrator component
+      - ./com_microschema/microschema.xml:/var/www/html/administrator/components/com_microschema/microschema.xml
+      - ./com_microschema/administrator/config.xml:/var/www/html/administrator/components/com_microschema/config.xml
+      - ./com_microschema/administrator/forms:/var/www/html/administrator/components/com_microschema/forms
+      - ./com_microschema/administrator/layouts:/var/www/html/administrator/components/com_microschema/layouts
+      - ./com_microschema/administrator/services:/var/www/html/administrator/components/com_microschema/services
+      - ./com_microschema/administrator/sql:/var/www/html/administrator/components/com_microschema/sql
+      - ./com_microschema/administrator/src:/var/www/html/administrator/components/com_microschema/src
+      - ./com_microschema/administrator/tmpl:/var/www/html/administrator/components/com_microschema/tmpl
+      - ./com_microschema/media:/var/www/html/media/com_microschema
+      - ./com_microschema/administrator/language/en-GB/com_microschema.ini:/var/www/html/administrator/language/en-GB/com_microschema.ini
+      - ./com_microschema/administrator/language/en-GB/com_microschema.sys.ini:/var/www/html/administrator/language/en-GB/com_microschema.sys.ini
+      - ./com_microschema/administrator/language/ru-RU/com_microschema.ini:/var/www/html/administrator/language/ru-RU/com_microschema.ini
+      - ./com_microschema/administrator/language/ru-RU/com_microschema.sys.ini:/var/www/html/administrator/language/ru-RU/com_microschema.sys.ini
+    depends_on:
+      db:
+        condition: service_healthy
+    working_dir: /var/www/html
+
+  db:
+    image: mariadb:11.4
+    restart: unless-stopped
+    environment:
+      MARIADB_DATABASE: ${MYSQL_DATABASE}
+      MARIADB_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    ports:
+      - "${MYSQL_EXTERNAL_PORT}:3306"
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    volumes:
+      - db-data:/var/lib/mysql
+
+volumes:
+  db-data:

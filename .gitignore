@@ -1,0 +1,9 @@
+.idea/
+.env
+.php-cs-fixer.cache
+node_modules/
+dist/
+/com_microschema/media/js/schema-editor.js
+docker/joomla/*
+!docker/joomla/.gitkeep
+vendor/

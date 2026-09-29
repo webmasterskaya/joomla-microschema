@@ -1,0 +1,35 @@
+name: PHP code quality
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  code-quality:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          coverage: none
+          tools: composer:v2
+
+      - name: Install Composer dependencies
+        run: composer install --no-interaction --prefer-dist --no-progress
+
+      - name: Check PHP syntax
+        run: |
+          php -l .php-cs-fixer.dist.php
+          find com_microschema mod_microschema plugins \
+            -type f -name '*.php' -print0 \
+            | xargs -0 -n 1 php -l
+
+      - name: Check PHP code style
+        run: make cs-check

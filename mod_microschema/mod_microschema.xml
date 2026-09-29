@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="module" client="site" method="upgrade">
+    <name>mod_microschema</name>
+    <version>0.1.0</version>
+    <description>MOD_MICROSCHEMA_XML_DESCRIPTION</description>
+    <namespace path="src">Joomla\Module\Microschema</namespace>
+    <files>
+        <folder module="mod_microschema">services</folder>
+        <folder>src</folder>
+        <folder>tmpl</folder>
+    </files>
+    <languages folder="language">
+        <language tag="en-GB">en-GB/mod_microschema.ini</language>
+        <language tag="en-GB">en-GB/mod_microschema.sys.ini</language>
+        <language tag="ru-RU">ru-RU/mod_microschema.ini</language>
+        <language tag="ru-RU">ru-RU/mod_microschema.sys.ini</language>
+    </languages>
+    <media destination="mod_microschema" folder="media" />
+    <config>
+        <fields name="params">
+            <fieldset
+                name="basic"
+                addfieldprefix="Joomla\Component\Microschema\Administrator\Field"
+            >
+                <field
+                    name="schema_type"
+                    type="schemaorgtype"
+                    label="MOD_MICROSCHEMA_FIELD_SCHEMA_TYPE_LABEL"
+                    description="MOD_MICROSCHEMA_FIELD_SCHEMA_TYPE_DESC"
+                >
+                    <option value="">JSELECT</option>
+                </field>
+
+                <field
+                    name="schema_properties"
+                    type="schemaorgproperties"
+                    schemafield="schema_type"
+                    label="MOD_MICROSCHEMA_FIELD_SCHEMA_PROPERTIES_LABEL"
+                    hiddenLabel="true"
+                    filter="raw"
+                />
+            </fieldset>
+        </fields>
+    </config>
+</extension>

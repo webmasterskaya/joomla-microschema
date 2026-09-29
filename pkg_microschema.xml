@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="package" method="upgrade">
+    <name>PKG_MICROSCHEMA</name>
+    <packagename>microschema</packagename>
+    <version>0.1.1</version>
+    <description>PKG_MICROSCHEMA_XML_DESCRIPTION</description>
+    <files>
+        <file type="component" id="com_microschema">com_microschema.zip</file>
+        <file type="plugin" id="microschema" group="system">plg_system_microschema.zip</file>
+        <file type="plugin" id="content" group="microschema">plg_microschema_content.zip</file>
+        <file type="plugin" id="contact" group="microschema">plg_microschema_contact.zip</file>
+        <file type="module" id="mod_microschema" client="site">mod_microschema.zip</file>
+    </files>
+    <languages folder="language">
+        <language tag="en-GB">en-GB/pkg_microschema.ini</language>
+        <language tag="en-GB">en-GB/pkg_microschema.sys.ini</language>
+        <language tag="ru-RU">ru-RU/pkg_microschema.ini</language>
+        <language tag="ru-RU">ru-RU/pkg_microschema.sys.ini</language>
+    </languages>
+</extension>

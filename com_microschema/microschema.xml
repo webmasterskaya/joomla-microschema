@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="component" method="upgrade">
+    <name>com_microschema</name>
+    <version>0.1.1</version>
+    <description>COM_MICROSCHEMA_XML_DESCRIPTION</description>
+    <namespace path="src">Joomla\Component\Microschema</namespace>
+    <administration>
+        <files folder="administrator">
+            <filename>config.xml</filename>
+            <folder>forms</folder>
+            <folder>layouts</folder>
+            <folder>services</folder>
+            <folder>sql</folder>
+            <folder>src</folder>
+            <folder>tmpl</folder>
+        </files>
+        <languages folder="administrator/language">
+            <language tag="en-GB">en-GB/com_microschema.ini</language>
+            <language tag="en-GB">en-GB/com_microschema.sys.ini</language>
+            <language tag="ru-RU">ru-RU/com_microschema.ini</language>
+            <language tag="ru-RU">ru-RU/com_microschema.sys.ini</language>
+        </languages>
+    </administration>
+    <media destination="com_microschema" folder="media" />
+    <install>
+        <sql>
+            <file driver="mysql" charset="utf8mb4">sql/install.mysql.utf8mb4.sql</file>
+        </sql>
+    </install>
+    <uninstall>
+        <sql>
+            <file driver="mysql" charset="utf8mb4">sql/uninstall.mysql.utf8mb4.sql</file>
+        </sql>
+    </uninstall>
+    <update>
+        <schemas>
+            <schemapath type="mysql">sql/updates/mysql</schemapath>
+        </schemas>
+    </update>
+</extension>

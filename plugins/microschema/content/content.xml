@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="plugin" group="microschema" method="upgrade">
+    <name>plg_microschema_content</name>
+    <version>0.1.0</version>
+    <description>PLG_MICROSCHEMA_CONTENT_XML_DESCRIPTION</description>
+    <namespace path="src">Joomla\Plugin\Microschema\Content</namespace>
+    <files>
+        <folder plugin="content">services</folder>
+        <folder>forms</folder>
+        <folder>src</folder>
+    </files>
+    <scriptfile>script.php</scriptfile>
+    <languages folder="language">
+        <language tag="en-GB">en-GB/plg_microschema_content.ini</language>
+        <language tag="en-GB">en-GB/plg_microschema_content.sys.ini</language>
+        <language tag="ru-RU">ru-RU/plg_microschema_content.ini</language>
+        <language tag="ru-RU">ru-RU/plg_microschema_content.sys.ini</language>
+    </languages>
+    <config>
+        <fields name="params">
+            <fieldset
+                name="default_articles"
+                label="PLG_MICROSCHEMA_CONTENT_FIELDSET_DEFAULT_ARTICLES"
+                addfieldprefix="Joomla\Component\Microschema\Administrator\Field"
+            >
+                <field
+                    name="default_item_schema_type"
+                    type="schemaorgtype"
+                    default=""
+                    label="PLG_MICROSCHEMA_CONTENT_FIELD_SCHEMA_TYPE_LABEL"
+                    description="PLG_MICROSCHEMA_CONTENT_FIELD_DEFAULT_ARTICLES_SCHEMA_TYPE_DESC"
+                >
+                    <option value="">PLG_MICROSCHEMA_CONTENT_OPTION_DISABLED</option>
+                </field>
+
+                <field
+                    name="default_item_schema_properties"
+                    type="schemaorgproperties"
+                    schemafield="default_item_schema_type"
+                    context="com_content.category.articles"
+                    label="PLG_MICROSCHEMA_CONTENT_FIELD_SCHEMA_PROPERTIES_LABEL"
+                    hiddenLabel="true"
+                    filter="raw"
+                />
+            </fieldset>
+
+            <fieldset
+                name="default_categories"
+                label="PLG_MICROSCHEMA_CONTENT_FIELDSET_DEFAULT_CATEGORIES"
+                addfieldprefix="Joomla\Component\Microschema\Administrator\Field"
+            >
+                <field
+                    name="default_category_schema_type"
+                    type="schemaorgtype"
+                    default=""
+                    label="PLG_MICROSCHEMA_CONTENT_FIELD_SCHEMA_TYPE_LABEL"
+                    description="PLG_MICROSCHEMA_CONTENT_FIELD_DEFAULT_CATEGORIES_SCHEMA_TYPE_DESC"
+                >
+                    <option value="">PLG_MICROSCHEMA_CONTENT_OPTION_DISABLED</option>
+                </field>
+
+                <field
+                    name="default_category_schema_properties"
+                    type="schemaorgproperties"
+                    schemafield="default_category_schema_type"
+                    context="com_content.categories"
+                    label="PLG_MICROSCHEMA_CONTENT_FIELD_SCHEMA_PROPERTIES_LABEL"
+                    hiddenLabel="true"
+                    filter="raw"
+                />
+            </fieldset>
+        </fields>
+    </config>
+</extension>

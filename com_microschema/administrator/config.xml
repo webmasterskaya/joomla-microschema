@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config>
+    <fieldset
+        name="settings"
+        label="COM_MICROSCHEMA_CONFIG_FIELDSET_SETTINGS"
+    >
+        <fieldset
+            name="schemaorg_settings"
+            label="COM_MICROSCHEMA_CONFIG_FIELDSET_SCHEMAORG"
+            addfieldprefix="Joomla\Component\Microschema\Administrator\Field"
+        >
+            <field
+                name="config_behavior"
+                type="configbehavior"
+                hiddenLabel="true"
+            />
+
+            <field
+                name="schemaorg_enabled"
+                type="radio"
+                label="COM_MICROSCHEMA_CONFIG_SCHEMAORG_ENABLED_LABEL"
+                description="COM_MICROSCHEMA_CONFIG_SCHEMAORG_ENABLED_DESC"
+                default="1"
+                layout="joomla.form.field.radio.switcher"
+            >
+                <option value="0">JNO</option>
+                <option value="1">JYES</option>
+            </field>
+
+            <field
+                name="output_position"
+                type="list"
+                default="head"
+                label="COM_MICROSCHEMA_CONFIG_OUTPUT_POSITION_LABEL"
+                description="COM_MICROSCHEMA_CONFIG_OUTPUT_POSITION_DESC"
+                validate="options"
+                showon="schemaorg_enabled:1"
+            >
+                <option value="head">COM_MICROSCHEMA_CONFIG_OUTPUT_POSITION_HEAD</option>
+                <option value="body">COM_MICROSCHEMA_CONFIG_OUTPUT_POSITION_BODY</option>
+            </field>
+
+            <field
+                name="schemaorg_check_existing_markup"
+                type="radio"
+                label="COM_MICROSCHEMA_CONFIG_CHECK_EXISTING_SCHEMA_MARKUP_LABEL"
+                description="COM_MICROSCHEMA_CONFIG_CHECK_EXISTING_SCHEMA_MARKUP_DESC"
+                default="0"
+                layout="joomla.form.field.radio.switcher"
+                showon="schemaorg_enabled:1"
+            >
+                <option value="0">JNO</option>
+                <option value="1">JYES</option>
+            </field>
+
+            <field
+                name="breadcrumblist_enabled"
+                type="radio"
+                label="COM_MICROSCHEMA_CONFIG_BREADCRUMBLIST_ENABLED_LABEL"
+                description="COM_MICROSCHEMA_CONFIG_BREADCRUMBLIST_ENABLED_DESC"
+                default="1"
+                layout="joomla.form.field.radio.switcher"
+                showon="schemaorg_enabled:1"
+            >
+                <option value="0">JNO</option>
+                <option value="1">JYES</option>
+            </field>
+        </fieldset>
+
+        <fieldset
+            name="social_metadata_settings"
+            label="COM_MICROSCHEMA_CONFIG_FIELDSET_SOCIALS"
+        >
+            <field
+                name="socials_enabled"
+                type="radio"
+                label="COM_MICROSCHEMA_CONFIG_SOCIALS_ENABLED_LABEL"
+                description="COM_MICROSCHEMA_CONFIG_SOCIALS_ENABLED_DESC"
+                default="1"
+                layout="joomla.form.field.radio.switcher"
+            >
+                <option value="0">JNO</option>
+                <option value="1">JYES</option>
+            </field>
+
+            <field
+                name="socials_check_existing_markup"
+                type="radio"
+                label="COM_MICROSCHEMA_CONFIG_CHECK_EXISTING_SOCIALS_MARKUP_LABEL"
+                description="COM_MICROSCHEMA_CONFIG_CHECK_EXISTING_SOCIALS_MARKUP_DESC"
+                default="0"
+                layout="joomla.form.field.radio.switcher"
+                showon="socials_enabled:1"
+            >
+                <option value="0">JNO</option>
+                <option value="1">JYES</option>
+            </field>
+        </fieldset>
+    </fieldset>
+
+    <fieldset
+        name="organization"
+        label="COM_MICROSCHEMA_CONFIG_FIELDSET_ORGANIZATION"
+        showon="schemaorg_enabled:1"
+        addfieldprefix="Joomla\Component\Microschema\Administrator\Field"
+    >
+        <field
+            name="organization_enabled"
+            type="radio"
+            label="COM_MICROSCHEMA_CONFIG_ORGANIZATION_ENABLED_LABEL"
+            description="COM_MICROSCHEMA_CONFIG_ORGANIZATION_ENABLED_DESC"
+            default="1"
+            layout="joomla.form.field.radio.switcher"
+        >
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
+        </field>
+
+        <field
+            name="organization_properties"
+            type="schemaorgproperties"
+            schematype="Organization"
+            label="COM_MICROSCHEMA_CONFIG_FIELDSET_ORGANIZATION"
+            hiddenLabel="true"
+            filter="raw"
+            showon="organization_enabled:1"
+        />
+    </fieldset>
+
+    <fieldset
+        name="website"
+        label="COM_MICROSCHEMA_CONFIG_FIELDSET_WEBSITE"
+        showon="schemaorg_enabled:1"
+        addfieldprefix="Joomla\Component\Microschema\Administrator\Field"
+    >
+        <field
+            name="website_enabled"
+            type="radio"
+            label="COM_MICROSCHEMA_CONFIG_WEBSITE_ENABLED_LABEL"
+            description="COM_MICROSCHEMA_CONFIG_WEBSITE_ENABLED_DESC"
+            default="1"
+            layout="joomla.form.field.radio.switcher"
+        >
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
+        </field>
+
+        <field
+            name="website_properties"
+            type="schemaorgproperties"
+            schematype="WebSite"
+            label="COM_MICROSCHEMA_CONFIG_FIELDSET_WEBSITE"
+            hiddenLabel="true"
+            filter="raw"
+            showon="website_enabled:1"
+        />
+    </fieldset>
+
+    <fieldset
+        name="socials"
+        label="COM_MICROSCHEMA_CONFIG_FIELDSET_SOCIALS"
+        addfieldprefix="Joomla\Component\Microschema\Administrator\Field"
+    >
+        <field
+            name="socials"
+            type="socialmetadatasettings"
+            label="COM_MICROSCHEMA_CONFIG_FIELDSET_SOCIALS"
+            hiddenLabel="true"
+            filter="raw"
+            showon="socials_enabled:1"
+        />
+    </fieldset>
+
+    <fieldset
+        name="integrations"
+        label="COM_MICROSCHEMA_CONFIG_FIELDSET_INTEGRATIONS"
+        addfieldprefix="Joomla\Component\Microschema\Administrator\Field"
+    >
+        <field
+            name="integrations"
+            type="integrations"
+            hiddenLabel="true"
+        />
+    </fieldset>
+
+</config>

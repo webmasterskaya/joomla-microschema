@@ -1,0 +1,40 @@
+{
+  "$schema": "https://developer.joomla.org/schemas/json-schema/web_assets.json",
+  "name": "com_microschema",
+  "version": "0.1.13",
+  "description": "MicroSchema administrator assets",
+  "license": "GPL-2.0-or-later",
+  "assets": [
+    {
+      "name": "com_microschema.config",
+      "type": "script",
+      "uri": "com_microschema/config.js",
+      "dependencies": [
+        "core"
+      ],
+      "attributes": {
+        "type": "module"
+      },
+      "version": "0.1.13"
+    },
+    {
+      "name": "com_microschema.schema-editor",
+      "type": "style",
+      "uri": "com_microschema/schema-editor.css",
+      "version": "0.1.13"
+    },
+    {
+      "name": "com_microschema.schema-editor",
+      "type": "script",
+      "uri": "com_microschema/schema-editor.js",
+      "dependencies": [
+        "core",
+        "field.calendar"
+      ],
+      "attributes": {
+        "type": "module"
+      },
+      "version": "0.1.13"
+    }
+  ]
+}

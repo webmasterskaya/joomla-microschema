@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+    <fields name="microschema">
+        <fieldset
+            name="microschema_schemaorg_menu_contact"
+            label="PLG_MICROSCHEMA_CONTACT_FIELDSET_SCHEMAORG_MENU_CONTACT"
+            addfieldprefix="Joomla\Component\Microschema\Administrator\Field"
+        >
+            <field
+                name="schema_type"
+                type="schemaorgtype"
+                default=""
+                label="PLG_MICROSCHEMA_CONTACT_FIELD_SCHEMA_TYPE_LABEL"
+                description="PLG_MICROSCHEMA_CONTACT_FIELD_MENU_CONTACT_SCHEMA_TYPE_DESC"
+            >
+                <option value="">PLG_MICROSCHEMA_CONTACT_OPTION_INHERIT</option>
+                <option value="__disabled">PLG_MICROSCHEMA_CONTACT_OPTION_DISABLED</option>
+            </field>
+
+            <field
+                name="schema_properties"
+                type="schemaorgproperties"
+                schemafield="schema_type"
+                context="com_contact.contact"
+                label="PLG_MICROSCHEMA_CONTACT_FIELD_SCHEMA_PROPERTIES_LABEL"
+                hiddenLabel="true"
+                filter="raw"
+            />
+        </fieldset>
+    </fields>
+</form>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+    <fields name="microschema">
+        <fieldset
+            name="microschema_schemaorg_articles"
+            label="PLG_MICROSCHEMA_CONTENT_FIELDSET_SCHEMAORG_CATEGORY_ARTICLES"
+            addfieldprefix="Joomla\Component\Microschema\Administrator\Field"
+        >
+            <field
+                name="item_schema_type"
+                type="schemaorgtype"
+                default=""
+                label="PLG_MICROSCHEMA_CONTENT_FIELD_SCHEMA_TYPE_LABEL"
+                description="PLG_MICROSCHEMA_CONTENT_FIELD_CATEGORY_ARTICLES_SCHEMA_TYPE_DESC"
+            >
+                <option value="">PLG_MICROSCHEMA_CONTENT_OPTION_INHERIT</option>
+                <option value="__disabled">PLG_MICROSCHEMA_CONTENT_OPTION_DISABLED</option>
+            </field>
+
+            <field
+                name="item_schema_properties"
+                type="schemaorgproperties"
+                schemafield="item_schema_type"
+                context="com_content.category.articles"
+                label="PLG_MICROSCHEMA_CONTENT_FIELD_SCHEMA_PROPERTIES_LABEL"
+                hiddenLabel="true"
+                filter="raw"
+            />
+        </fieldset>
+
+        <fieldset
+            name="microschema_schemaorg_category"
+            label="PLG_MICROSCHEMA_CONTENT_FIELDSET_SCHEMAORG_CATEGORY"
+            addfieldprefix="Joomla\Component\Microschema\Administrator\Field"
+        >
+            <field
+                name="category_schema_type"
+                type="schemaorgtype"
+                default=""
+                label="PLG_MICROSCHEMA_CONTENT_FIELD_SCHEMA_TYPE_LABEL"
+                description="PLG_MICROSCHEMA_CONTENT_FIELD_CATEGORY_SCHEMA_TYPE_DESC"
+            >
+                <option value="">PLG_MICROSCHEMA_CONTENT_OPTION_INHERIT</option>
+                <option value="__disabled">PLG_MICROSCHEMA_CONTENT_OPTION_DISABLED</option>
+            </field>
+
+            <field
+                name="category_schema_properties"
+                type="schemaorgproperties"
+                schemafield="category_schema_type"
+                context="com_content.categories"
+                label="PLG_MICROSCHEMA_CONTENT_FIELD_SCHEMA_PROPERTIES_LABEL"
+                hiddenLabel="true"
+                filter="raw"
+            />
+        </fieldset>
+    </fields>
+</form>
