@@ -780,7 +780,18 @@ final class Contact extends CMSPlugin implements SubscriberInterface, Dispatcher
             return;
         }
 
-        $target = $this->getMenuTarget($event->getData())
+        $data = $event->getData();
+
+        if (!is_array($data) && !is_object($data)) {
+            $application = $this->getApplication();
+            $input = method_exists($application, 'getInput') ? $application->getInput() : null;
+            $data = is_object($input) && method_exists($input, 'get')
+                ? $input->get('jform', [], 'array')
+                : [];
+            $data = is_array($data) ? $data : [];
+        }
+
+        $target = $this->getMenuTarget($data)
             ?? $this->getMenuTarget($event->getItem());
 
         if ($target === null) {
@@ -791,7 +802,7 @@ final class Contact extends CMSPlugin implements SubscriberInterface, Dispatcher
             return;
         }
 
-        $submitted = $this->getMicroschemaData($event->getData());
+        $submitted = $this->getMicroschemaData($data);
         $keys = $this->getMenuSettingKeys($target);
 
         if ($keys === [] || array_intersect($keys, array_keys($submitted)) === []) {
