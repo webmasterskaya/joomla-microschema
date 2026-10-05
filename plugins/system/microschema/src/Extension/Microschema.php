@@ -38,6 +38,7 @@ use Joomla\Component\Microschema\Administrator\Schema\SchemaIdentityEnricher;
 use Joomla\Component\Microschema\Administrator\Schema\SchemaLanguageEnricher;
 use Joomla\Component\Microschema\Administrator\Schema\SchemaMarkupInjector;
 use Joomla\Component\Microschema\Administrator\Schema\SchemaResolver;
+use Joomla\Component\Microschema\Administrator\Schema\SchemaUrlEnricher;
 use Joomla\Event\DispatcherAwareInterface;
 use Joomla\Event\DispatcherAwareTrait;
 use Joomla\Event\SubscriberInterface;
@@ -63,6 +64,7 @@ final class Microschema extends CMSPlugin implements SubscriberInterface, Dispat
         private readonly Registry $configuration,
         private readonly SchemaResolver $schemaResolver,
         private readonly SchemaLanguageEnricher $schemaLanguageEnricher,
+        private readonly SchemaUrlEnricher $schemaUrlEnricher,
         private readonly SchemaIdentityEnricher $schemaIdentityEnricher,
         private readonly SchemaDateEnricher $schemaDateEnricher,
         private readonly JsonLdRenderer $jsonLdRenderer,
@@ -140,6 +142,11 @@ final class Microschema extends CMSPlugin implements SubscriberInterface, Dispat
                 $descriptors,
                 $application->getLanguage()->getTag(),
             );
+            $schemas = $this->schemaUrlEnricher->enrich(
+                $schemas,
+                $descriptors,
+                Uri::root(),
+            );
             $schemas = $this->schemaIdentityEnricher->enrich(
                 $schemas,
                 Uri::root(),
@@ -215,6 +222,10 @@ final class Microschema extends CMSPlugin implements SubscriberInterface, Dispat
             ? $menu->getDefault($language->getTag())
             : $menu->getDefault();
 
+        if ($this->isHomePage($home, $menu->getActive())) {
+            return;
+        }
+
         if (is_object($home)) {
             $entries[] = [
                 'name' => $this->normalizeBreadcrumbName((string) $home->title),
@@ -231,11 +242,19 @@ final class Microschema extends CMSPlugin implements SubscriberInterface, Dispat
             ];
         }
 
-        $breadcrumb = new BreadcrumbListBuilder()->build($entries);
+        $breadcrumb = (new BreadcrumbListBuilder())->build($entries);
 
         if ($breadcrumb !== []) {
             $collector->addSchema('global.breadcrumb', $breadcrumb);
         }
+    }
+
+    private function isHomePage(?object $home, ?object $active): bool
+    {
+        return is_object($home)
+            && is_object($active)
+            && (int) ($home->id ?? 0) > 0
+            && (int) ($home->id ?? 0) === (int) ($active->id ?? 0);
     }
 
     private function normalizeBreadcrumbName(string $name): string

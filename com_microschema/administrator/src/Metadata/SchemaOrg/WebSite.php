@@ -16,7 +16,7 @@ final class WebSite extends AbstractDescriptor
         return [
             $this->property('name', required: true),
             $this->property('url', ['URL'], required: true),
-            $this->property('publisher', ['Organization']),
+            $this->property('publisher', ['Organization', '@id']),
             $this->property('inLanguage', automatic: true),
         ];
     }

@@ -21,6 +21,7 @@ use Joomla\Component\Microschema\Administrator\Schema\SchemaIdentityEnricher;
 use Joomla\Component\Microschema\Administrator\Schema\SchemaLanguageEnricher;
 use Joomla\Component\Microschema\Administrator\Schema\SchemaMarkupInjector;
 use Joomla\Component\Microschema\Administrator\Schema\SchemaResolver;
+use Joomla\Component\Microschema\Administrator\Schema\SchemaUrlEnricher;
 use Joomla\DI\Container;
 use Joomla\DI\ServiceProviderInterface;
 use Joomla\Event\DispatcherInterface;
@@ -56,6 +57,7 @@ return new class implements ServiceProviderInterface {
                     $container->get('config'),
                     new SchemaResolver(),
                     new SchemaLanguageEnricher(),
+                    new SchemaUrlEnricher(),
                     new SchemaIdentityEnricher(),
                     new SchemaDateEnricher(),
                     new JsonLdRenderer(),

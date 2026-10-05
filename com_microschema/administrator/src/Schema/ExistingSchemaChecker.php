@@ -21,6 +21,7 @@ final class ExistingSchemaChecker
         }
 
         $existingTypes = $this->findExistingTypes($body);
+        $existingListIds = $this->findExistingListIds($body);
 
         if ($existingTypes === []) {
             return $schemas;
@@ -29,6 +30,11 @@ final class ExistingSchemaChecker
         foreach ($schemas as $uid => $schema) {
             foreach ($this->normalizeTypes($schema['@type'] ?? null) as $type) {
                 if (!isset($existingTypes[$type])) {
+                    continue;
+                }
+
+                // Multiple independent lists are valid on the same page.
+                if ($type === 'ItemList' && !isset($existingListIds[$schema['@id'] ?? ''])) {
                     continue;
                 }
 
@@ -58,6 +64,53 @@ final class ExistingSchemaChecker
         }
 
         return $types;
+    }
+
+    /** @return array<string, true> */
+    private function findExistingListIds(string $body): array
+    {
+        $ids = [];
+        preg_match_all(
+            '~<script\b(?=[^>]*\btype\s*=\s*(?:["\']application/ld\+json["\']|application/ld\+json\b))[^>]*>(.*?)</script\s*>~is',
+            $body,
+            $matches,
+        );
+        foreach ($matches[1] ?? [] as $json) {
+            $this->collectListIds(json_decode($json, true), false, $ids);
+        }
+
+        preg_match_all('~<[^>]+\bitemtype\s*=[^>]+>~is', $body, $tags);
+        foreach ($tags[0] ?? [] as $tag) {
+            if (!in_array('ItemList', $this->findMicrodataTypes($tag), true)) {
+                continue;
+            }
+            if (preg_match('~\bitemid\s*=\s*(?:(["\'])(.*?)\1|([^\s>]+))~is', $tag, $attribute)) {
+                $id = html_entity_decode($attribute[2] !== '' ? $attribute[2] : ($attribute[3] ?? ''), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+                if ($id !== '') {
+                    $ids[$id] = true;
+                }
+            }
+        }
+
+        return $ids;
+    }
+
+    /** @param array<string, true> $ids */
+    private function collectListIds(mixed $data, bool $inheritsContext, array &$ids): void
+    {
+        if (!is_array($data)) {
+            return;
+        }
+        $context = array_key_exists('@context', $data)
+            ? $this->containsSchemaOrgUrl($data['@context'])
+            : $inheritsContext;
+        if ($context && in_array('ItemList', $this->normalizeTypes($data['@type'] ?? null), true)
+            && is_string($data['@id'] ?? null) && $data['@id'] !== '') {
+            $ids[$data['@id']] = true;
+        }
+        foreach ($data as $value) {
+            $this->collectListIds($value, $context, $ids);
+        }
     }
 
     /** @return array<string, string> */

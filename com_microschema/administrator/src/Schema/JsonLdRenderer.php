@@ -15,27 +15,34 @@ final class JsonLdRenderer
      */
     public function render(array $schemas): array
     {
-        $tags = [];
-
-        foreach ($schemas as $schema) {
-            if (!array_key_exists('@context', $schema)) {
-                $schema = ['@context' => self::CONTEXT] + $schema;
-            }
-
-            $json = json_encode(
-                $schema,
-                JSON_THROW_ON_ERROR
-                | JSON_UNESCAPED_SLASHES
-                | JSON_UNESCAPED_UNICODE
-                | JSON_HEX_TAG
-                | JSON_HEX_AMP
-                | JSON_HEX_APOS
-                | JSON_HEX_QUOT,
-            );
-
-            $tags[] = '<script type="application/ld+json">'.$json.'</script>';
+        if ($schemas === []) {
+            return [];
         }
 
-        return $tags;
+        $graph = [];
+
+        foreach ($schemas as $schema) {
+            if (($schema['@context'] ?? null) === self::CONTEXT) {
+                unset($schema['@context']);
+            }
+
+            $graph[] = $schema;
+        }
+
+        $json = json_encode(
+            [
+                '@context' => self::CONTEXT,
+                '@graph' => $graph,
+            ],
+            JSON_THROW_ON_ERROR
+            | JSON_UNESCAPED_SLASHES
+            | JSON_UNESCAPED_UNICODE
+            | JSON_HEX_TAG
+            | JSON_HEX_AMP
+            | JSON_HEX_APOS
+            | JSON_HEX_QUOT,
+        );
+
+        return ['<script type="application/ld+json">'.$json.'</script>'];
     }
 }
