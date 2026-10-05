@@ -5,6 +5,7 @@
     <description>COM_MICROSCHEMA_XML_DESCRIPTION</description>
     <namespace path="src">Joomla\Component\Microschema</namespace>
     <administration>
+        <menu link="option=com_config&amp;view=component&amp;component=com_microschema">COM_MICROSCHEMA</menu>
         <files folder="administrator">
             <filename>config.xml</filename>
             <folder>forms</folder>
@@ -21,7 +22,11 @@
             <language tag="ru-RU">ru-RU/com_microschema.sys.ini</language>
         </languages>
     </administration>
-    <media destination="com_microschema" folder="media" />
+    <media destination="com_microschema" folder="media">
+        <filename>joomla.asset.json</filename>
+        <folder>css</folder>
+        <folder>js</folder>
+    </media>
     <install>
         <sql>
             <file driver="mysql" charset="utf8mb4">sql/install.mysql.utf8mb4.sql</file>
