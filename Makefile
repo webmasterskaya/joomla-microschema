@@ -9,6 +9,7 @@ JOOMLA_CLI ?= cli/joomla.php
 DIST_DIR ?= dist
 DIST_DIR_ABS = $(abspath $(DIST_DIR))
 PHP_CS_FIXER ?= vendor/bin/php-cs-fixer
+CODECEPT ?= vendor/bin/codecept
 
 UNAME_S := $(shell uname -s)
 CURRENT_VERSION := $(or $(VERSION),$(shell git describe --tags --always 2>/dev/null || printf 'dev'))
@@ -21,7 +22,7 @@ endif
 
 .DEFAULT_GOAL := help
 
-.PHONY: help build rebuild up up-rebuild up-alone down down-orphans restart down-v joomla-connect db-connect cache-clean install install-dev install-node install-php install-php-dev build-node cs-check cs-fix update-version artifact build-package update-yootheme-plugin-version artifact-yootheme-plugin build-yootheme-plugin
+.PHONY: help build rebuild up up-rebuild up-alone down down-orphans restart down-v joomla-connect db-connect cache-clean install install-dev install-node install-php install-php-dev build-node test test-unit test-functional test-js cs-check cs-fix update-version artifact build-package update-yootheme-plugin-version artifact-yootheme-plugin build-yootheme-plugin
 
 build: ## Собрать контейнеры
 	$(COMPOSE) build
@@ -74,6 +75,18 @@ install-php-dev:
 
 build-node: ## Собрать frontend-ресурсы
 	@npm run build
+
+test: test-unit test-js ## Запустить быстрые тесты
+
+test-unit: ## Запустить unit-тесты Codeception
+	@php $(CODECEPT) run Unit
+
+test-functional: ## Запустить функциональные тесты в Joomla-контейнере
+	@$(COMPOSE) exec -T $(JOOMLA_SERVICE) php /var/www/html/$(CODECEPT) run Administrator
+	@$(COMPOSE) exec -T $(JOOMLA_SERVICE) php /var/www/html/$(CODECEPT) run Site
+
+test-js: ## Запустить тесты frontend-состояния
+	@node --test tests/js/schema-editor-state.test.mjs
 
 cs-check: ## Проверить форматирование PHP-кода
 	@$(PHP_CS_FIXER) fix --dry-run --diff --using-cache=no

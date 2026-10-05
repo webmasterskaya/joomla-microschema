@@ -7,3 +7,5 @@ dist/
 docker/joomla/*
 !docker/joomla/.gitkeep
 vendor/
+tests/_output/
+tests/Support/_generated/

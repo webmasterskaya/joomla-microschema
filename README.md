@@ -44,3 +44,25 @@ YOOtheme Pro Builder. Плагин не входит в пакет `pkg_microsch
 окружения способом.
 
 Плагин для YOOtheme Pro собирается независимо от основного пакета командой `make build-yootheme-plugin`.
+
+### Тесты
+
+PHP-тесты запускаются через Codeception. Быстрый набор не требует работающей Joomla:
+
+```shell
+make test-unit
+```
+
+Функциональные тесты используют настоящие HTTP-точки входа Joomla, тестовую базу данных и
+`sovmart/codeception-module-joomla`. Они предназначены только для изолированного локального окружения:
+
+```shell
+make up
+make test-functional
+```
+
+Полный быстрый прогон PHP- и JavaScript-тестов:
+
+```shell
+make test
+```

@@ -19,7 +19,35 @@
         "ext-simplexml": "*"
     },
     "require-dev": {
-        "friendsofphp/php-cs-fixer": "*"
+        "codeception/codeception": "^5.3",
+        "codeception/module-db": "^3.2",
+        "codeception/module-phpbrowser": "^4.0",
+        "friendsofphp/php-cs-fixer": "*",
+        "phpunit/phpunit": "^11.5",
+        "sovmart/codeception-module-joomla": "dev-main"
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/SovMart-Team/Codeception-Module-Joomla.git"
+        }
+    ],
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        },
+        "exclude-from-classmap": [
+            "tests/Administrator/",
+            "tests/Site/"
+        ]
+    },
+    "scripts": {
+        "test": "codecept run Unit",
+        "test:functional": [
+            "codecept run Administrator",
+            "codecept run Site"
+        ],
+        "test:js": "node --test tests/js/schema-editor-state.test.mjs"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
@@ -27,6 +55,7 @@
         "platform": {
             "php": "8.2"
         },
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {}
     }
 }

@@ -5,6 +5,11 @@ $finder = PhpCsFixer\Finder::create()
         __DIR__.'/com_microschema',
         __DIR__.'/mod_microschema',
         __DIR__.'/plugins',
+        __DIR__.'/tests',
+    ])
+    ->exclude([
+        'Support/_generated',
+        'Support/Scenarios',
     ]);
 
 return (new PhpCsFixer\Config())

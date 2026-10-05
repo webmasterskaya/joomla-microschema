@@ -16,6 +16,7 @@ services:
       JOOMLA_DB_NAME: ${JOOMLA_DB_NAME}
       JOOMLA_DB_USER: ${JOOMLA_DB_USER}
       JOOMLA_DB_PASSWORD: ${JOOMLA_DB_PASSWORD}
+      JOOMLA_DB_PREFIX: ${JOOMLA_DB_PREFIX:-joom_}
       JOOMLA_DB_TYPE: mysqli
       JOOMLA_EXTENSIONS_URLS: ${JOOMLA_EXTENSIONS_URLS}
       JOOMLA_EXTENSIONS_PATHS: ${JOOMLA_EXTENSIONS_PATHS}
@@ -23,10 +24,19 @@ services:
       PHP_IDE_CONFIG: serverName=localhost
       XDEBUG_CONFIG: client_host=host.docker.internal client_port=${XDEBUG_CLIENT_PORT} idekey=PHPSTORM
       XDEBUG_MODE: develop,debug
+      MICROSCHEMA_TEST_BASE_URL: ${MICROSCHEMA_TEST_BASE_URL:-http://localhost}
+      MICROSCHEMA_TEST_ROOT: ${MICROSCHEMA_TEST_ROOT:-/var/www/html}
+      MICROSCHEMA_TEST_FIXTURE_ROOT: ${MICROSCHEMA_TEST_FIXTURE_ROOT:-/var/www/html/tests/Fixtures/Functional}
+      MICROSCHEMA_TEST_IMAGES_ROOT: ${MICROSCHEMA_TEST_IMAGES_ROOT:-/var/www/html/images/microschema-codeception}
+      MICROSCHEMA_TEST_STORAGE_ROOT: ${MICROSCHEMA_TEST_STORAGE_ROOT:-/var/www/html/microschema-codeception-storage}
+      MICROSCHEMA_TEST_TMP_ROOT: ${MICROSCHEMA_TEST_TMP_ROOT:-/var/www/html/tmp/microschema-codeception}
     extra_hosts:
       - "host.docker.internal:host-gateway"
     volumes:
       - ./docker/joomla:/var/www/html
+      - ./codeception.yml:/var/www/html/codeception.yml:ro
+      - ./tests:/var/www/html/tests
+      - ./vendor:/var/www/html/vendor:ro
       # System plugin
       - ./plugins/system/microschema/microschema.xml:/var/www/html/plugins/system/microschema/microschema.xml
       - ./plugins/system/microschema/services:/var/www/html/plugins/system/microschema/services
