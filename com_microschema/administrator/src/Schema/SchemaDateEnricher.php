@@ -123,7 +123,7 @@ final class SchemaDateEnricher
 
         try {
             if ($type === 'Date') {
-                return new \DateTimeImmutable($value, new \DateTimeZone('UTC'))->format('Y-m-d');
+                return (new \DateTimeImmutable($value, new \DateTimeZone('UTC')))->format('Y-m-d');
             }
 
             $hasTimezone = preg_match('/(?:Z|[+-]\d{2}:?\d{2})$/i', $value) === 1;

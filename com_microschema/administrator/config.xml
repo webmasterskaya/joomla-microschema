@@ -11,7 +11,7 @@
         >
             <field
                 name="config_behavior"
-                type="configbehavior"
+                type="configBehavior"
                 hiddenLabel="true"
             />
 
@@ -118,7 +118,7 @@
 
         <field
             name="organization_properties"
-            type="schemaorgproperties"
+            type="schemaOrgProperties"
             schematype="Organization"
             label="COM_MICROSCHEMA_CONFIG_FIELDSET_ORGANIZATION"
             hiddenLabel="true"
@@ -147,7 +147,7 @@
 
         <field
             name="website_properties"
-            type="schemaorgproperties"
+            type="schemaOrgProperties"
             schematype="WebSite"
             label="COM_MICROSCHEMA_CONFIG_FIELDSET_WEBSITE"
             hiddenLabel="true"
@@ -163,7 +163,7 @@
     >
         <field
             name="socials"
-            type="socialmetadatasettings"
+            type="socialMetadataSettings"
             label="COM_MICROSCHEMA_CONFIG_FIELDSET_SOCIALS"
             hiddenLabel="true"
             filter="raw"

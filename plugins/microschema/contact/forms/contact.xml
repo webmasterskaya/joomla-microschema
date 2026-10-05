@@ -8,7 +8,7 @@
         >
             <field
                 name="schema_type"
-                type="schemaorgtype"
+                type="schemaOrgType"
                 default=""
                 label="PLG_MICROSCHEMA_CONTACT_FIELD_SCHEMA_TYPE_LABEL"
                 description="PLG_MICROSCHEMA_CONTACT_FIELD_SCHEMA_TYPE_DESC"
@@ -19,7 +19,7 @@
 
             <field
                 name="schema_properties"
-                type="schemaorgproperties"
+                type="schemaOrgProperties"
                 schemafield="schema_type"
                 context="com_contact.contact"
                 label="PLG_MICROSCHEMA_CONTACT_FIELD_SCHEMA_PROPERTIES_LABEL"

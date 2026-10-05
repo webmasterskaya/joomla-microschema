@@ -1,13 +1,10 @@
 <?php
 
 $finder = PhpCsFixer\Finder::create()
-    ->in(__DIR__)
-    ->exclude([
-        'dist',
-        'docker',
-        'node_modules',
-        'tests',
-        'vendor',
+    ->in([
+        __DIR__.'/com_microschema',
+        __DIR__.'/mod_microschema',
+        __DIR__.'/plugins',
     ]);
 
 return (new PhpCsFixer\Config())
@@ -15,12 +12,13 @@ return (new PhpCsFixer\Config())
     ->setRules([
         '@PER-CS2x0' => true,
         '@PER-CS2x0:risky' => true,
-        '@PHP8x4Migration' => true,
+        '@PHP8x2Migration' => true,
         '@Symfony' => true,
         '@Symfony:risky' => true,
         'array_syntax' => ['syntax' => 'short'],
         'declare_strict_types' => false,
         'modernize_strpos' => true,
+        'new_expression_parentheses' => ['use_parentheses' => true],
         'no_unreachable_default_argument_value' => true,
         'no_useless_else' => true,
         'no_useless_return' => true,

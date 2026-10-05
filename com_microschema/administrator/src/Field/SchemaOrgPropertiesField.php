@@ -93,7 +93,7 @@ final class SchemaOrgPropertiesField extends FormField
             item: $formData,
             fieldValues: is_array($fieldValues) ? $fieldValues : [],
         );
-        $definition = new SchemaOrgFormDefinitionBuilder($schemas)->build($this->value);
+        $definition = (new SchemaOrgFormDefinitionBuilder($schemas))->build($this->value);
         $instanceId = $this->id.'-'.substr(hash('sha256', $this->name), 0, 8);
         $definition = [
             'instanceId' => $instanceId,

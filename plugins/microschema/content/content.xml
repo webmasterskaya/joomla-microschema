@@ -25,7 +25,7 @@
             >
                 <field
                     name="default_item_schema_type"
-                    type="schemaorgtype"
+                    type="schemaOrgType"
                     default=""
                     label="PLG_MICROSCHEMA_CONTENT_FIELD_SCHEMA_TYPE_LABEL"
                     description="PLG_MICROSCHEMA_CONTENT_FIELD_DEFAULT_ARTICLES_SCHEMA_TYPE_DESC"
@@ -35,7 +35,7 @@
 
                 <field
                     name="default_item_schema_properties"
-                    type="schemaorgproperties"
+                    type="schemaOrgProperties"
                     schemafield="default_item_schema_type"
                     context="com_content.category.articles"
                     label="PLG_MICROSCHEMA_CONTENT_FIELD_SCHEMA_PROPERTIES_LABEL"
@@ -51,7 +51,7 @@
             >
                 <field
                     name="default_category_schema_type"
-                    type="schemaorgtype"
+                    type="schemaOrgType"
                     default=""
                     label="PLG_MICROSCHEMA_CONTENT_FIELD_SCHEMA_TYPE_LABEL"
                     description="PLG_MICROSCHEMA_CONTENT_FIELD_DEFAULT_CATEGORIES_SCHEMA_TYPE_DESC"
@@ -61,7 +61,7 @@
 
                 <field
                     name="default_category_schema_properties"
-                    type="schemaorgproperties"
+                    type="schemaOrgProperties"
                     schemafield="default_category_schema_type"
                     context="com_content.categories"
                     label="PLG_MICROSCHEMA_CONTENT_FIELD_SCHEMA_PROPERTIES_LABEL"

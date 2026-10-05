@@ -2,17 +2,17 @@
 <form>
     <fields name="microschema">
         <fieldset name="microschema_schemaorg_menu_page" label="PLG_MICROSCHEMA_CONTACT_FIELDSET_SCHEMAORG_MENU_PAGE" addfieldprefix="Joomla\Component\Microschema\Administrator\Field">
-            <field name="page_schema_type" type="schemaorgtype" default="" label="PLG_MICROSCHEMA_CONTACT_FIELD_SCHEMA_TYPE_LABEL" description="PLG_MICROSCHEMA_CONTACT_FIELD_MENU_PAGE_SCHEMA_TYPE_DESC">
+            <field name="page_schema_type" type="schemaOrgType" default="" label="PLG_MICROSCHEMA_CONTACT_FIELD_SCHEMA_TYPE_LABEL" description="PLG_MICROSCHEMA_CONTACT_FIELD_MENU_PAGE_SCHEMA_TYPE_DESC">
                 <option value="">PLG_MICROSCHEMA_CONTACT_OPTION_NO_PAGE_SCHEMA</option>
             </field>
-            <field name="page_schema_properties" type="schemaorgproperties" schemafield="page_schema_type" context="com_contact.featured" label="PLG_MICROSCHEMA_CONTACT_FIELD_SCHEMA_PROPERTIES_LABEL" hiddenLabel="true" filter="raw" />
+            <field name="page_schema_properties" type="schemaOrgProperties" schemafield="page_schema_type" context="com_contact.featured" label="PLG_MICROSCHEMA_CONTACT_FIELD_SCHEMA_PROPERTIES_LABEL" hiddenLabel="true" filter="raw" />
         </fieldset>
         <fieldset name="microschema_schemaorg_menu_items" label="PLG_MICROSCHEMA_CONTACT_FIELDSET_SCHEMAORG_MENU_CONTACTS" addfieldprefix="Joomla\Component\Microschema\Administrator\Field">
-            <field name="item_schema_type" type="schemaorgtype" default="" label="PLG_MICROSCHEMA_CONTACT_FIELD_SCHEMA_TYPE_LABEL" description="PLG_MICROSCHEMA_CONTACT_FIELD_MENU_CONTACTS_SCHEMA_TYPE_DESC">
+            <field name="item_schema_type" type="schemaOrgType" default="" label="PLG_MICROSCHEMA_CONTACT_FIELD_SCHEMA_TYPE_LABEL" description="PLG_MICROSCHEMA_CONTACT_FIELD_MENU_CONTACTS_SCHEMA_TYPE_DESC">
                 <option value="">PLG_MICROSCHEMA_CONTACT_OPTION_INHERIT</option>
                 <option value="__disabled">PLG_MICROSCHEMA_CONTACT_OPTION_DISABLED</option>
             </field>
-            <field name="item_schema_properties" type="schemaorgproperties" schemafield="item_schema_type" context="com_contact.category.contacts" label="PLG_MICROSCHEMA_CONTACT_FIELD_SCHEMA_PROPERTIES_LABEL" hiddenLabel="true" filter="raw" />
+            <field name="item_schema_properties" type="schemaOrgProperties" schemafield="item_schema_type" context="com_contact.category.contacts" label="PLG_MICROSCHEMA_CONTACT_FIELD_SCHEMA_PROPERTIES_LABEL" hiddenLabel="true" filter="raw" />
         </fieldset>
     </fields>
 </form>

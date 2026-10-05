@@ -103,7 +103,7 @@ final class SchemaOrgFormBuilder
 
         $valueField = $fieldset->addChild('field');
         $valueField->addAttribute('name', 'data');
-        $valueField->addAttribute('type', 'schemaorgvalue');
+        $valueField->addAttribute('type', 'schemaOrgValue');
         $valueField->addAttribute('label', $property->name);
         $valueField->addAttribute('hiddenLabel', 'true');
         $valueField->addAttribute('types', implode(',', $property->types));

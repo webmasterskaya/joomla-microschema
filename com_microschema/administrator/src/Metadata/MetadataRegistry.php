@@ -57,7 +57,7 @@ final class MetadataRegistry
             throw new \InvalidArgumentException(sprintf('%s metadata descriptor must implement %s.', $descriptorClass, DescriptorInterface::class));
         }
 
-        $name = new $descriptorClass()->getName();
+        $name = (new $descriptorClass())->getName();
 
         if ($name === '') {
             throw new \InvalidArgumentException(sprintf('%s metadata descriptor name must not be empty.', $category));

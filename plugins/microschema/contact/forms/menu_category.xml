@@ -8,7 +8,7 @@
         >
             <field
                 name="item_schema_type"
-                type="schemaorgtype"
+                type="schemaOrgType"
                 default=""
                 label="PLG_MICROSCHEMA_CONTACT_FIELD_SCHEMA_TYPE_LABEL"
                 description="PLG_MICROSCHEMA_CONTACT_FIELD_MENU_CATEGORY_CONTACTS_SCHEMA_TYPE_DESC"
@@ -19,7 +19,7 @@
 
             <field
                 name="item_schema_properties"
-                type="schemaorgproperties"
+                type="schemaOrgProperties"
                 schemafield="item_schema_type"
                 context="com_contact.category.contacts"
                 label="PLG_MICROSCHEMA_CONTACT_FIELD_SCHEMA_PROPERTIES_LABEL"
@@ -35,7 +35,7 @@
         >
             <field
                 name="category_schema_type"
-                type="schemaorgtype"
+                type="schemaOrgType"
                 default=""
                 label="PLG_MICROSCHEMA_CONTACT_FIELD_SCHEMA_TYPE_LABEL"
                 description="PLG_MICROSCHEMA_CONTACT_FIELD_MENU_CATEGORY_SCHEMA_TYPE_DESC"
@@ -46,7 +46,7 @@
 
             <field
                 name="category_schema_properties"
-                type="schemaorgproperties"
+                type="schemaOrgProperties"
                 schemafield="category_schema_type"
                 context="com_contact.categories"
                 label="PLG_MICROSCHEMA_CONTACT_FIELD_SCHEMA_PROPERTIES_LABEL"
