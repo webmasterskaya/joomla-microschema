@@ -4,13 +4,18 @@ namespace Joomla\Component\Microschema\Administrator\DataSource;
 
 use Joomla\CMS\Language\Text;
 use Joomla\Component\Microschema\Administrator\DataCollection\CollectionIteration;
+use Joomla\Component\Microschema\Administrator\DataCollection\DataCollectionInterface;
 use Joomla\Component\Microschema\Administrator\DataCollection\DataCollectionRegistry;
+use Joomla\Component\Microschema\Administrator\DataCollection\DataCollectionResult;
 
 final readonly class DataSourceTemplateResolver
 {
     private const COLLECTION_MAX_DEPTH = 8;
 
     private const PLACEHOLDER_PATTERN = '/\{([A-Za-z][A-Za-z0-9_-]*)\.([A-Za-z0-9_-]+(?:\.[A-Za-z0-9_-]+)*)\}/';
+
+    /** @var \WeakMap<DataContext, array<string, DataCollectionResult>> */
+    private \WeakMap $collectionResults;
 
     public function __construct(
         private DataSourceRegistry $sourceRegistry,
@@ -19,10 +24,13 @@ final readonly class DataSourceTemplateResolver
         private DataCollectionRegistry $collectionRegistry,
         private ?\Closure $debugLogger = null,
     ) {
+        $this->collectionResults = new \WeakMap();
     }
 
     public function resolve(mixed $value, DataContext $context): mixed
     {
+        unset($this->collectionResults[$context]);
+
         return $this->resolveValue($value, $context, [], 0);
     }
 
@@ -72,6 +80,14 @@ final readonly class DataSourceTemplateResolver
         $collections = [];
 
         foreach ($this->collectionRegistry->forContext($context->context) as $collection) {
+            $catalog['sources'][] = [
+                'name' => $this->getCollectionSourceName($collection->getName()),
+                'label' => $collection->getLabel(),
+                'fields' => [
+                    ['name' => 'count', 'label' => Text::_('COM_MICROSCHEMA_DATA_SOURCE_ITERATION_COUNT'), 'type' => 'Integer', 'object' => false],
+                    ['name' => 'total', 'label' => Text::_('COM_MICROSCHEMA_DATA_SOURCE_ITERATION_TOTAL'), 'type' => 'Integer', 'object' => false],
+                ],
+            ];
             $previewContext = $collection->getPreviewContext($context);
             $previewContext = new DataContext(
                 $previewContext->context,
@@ -171,6 +187,12 @@ final readonly class DataSourceTemplateResolver
 
         if ($sourceName === 'iteration') {
             return $this->resolveIterationPlaceholder($path, $placeholder, $context);
+        }
+
+        $collection = $this->findCollectionBySourceName($sourceName, $context->context);
+
+        if ($collection !== null) {
+            return $this->resolveCollectionSummaryPlaceholder($collection, $path, $placeholder, $context);
         }
 
         if (!$this->sourceRegistry->has($sourceName, $context->context)) {
@@ -326,7 +348,7 @@ final readonly class DataSourceTemplateResolver
         }
 
         $collection = $this->collectionRegistry->get($collectionName, $context->context);
-        $result = $collection->getItems($context);
+        $result = $this->getCollectionResult($collection, $context);
         $count = count($result->items);
         $total = $result->total ?? $count;
         $resolved = [];
@@ -345,6 +367,59 @@ final readonly class DataSourceTemplateResolver
         }
 
         return $resolved;
+    }
+
+    private function getCollectionSourceName(string $collectionName): string
+    {
+        $slug = trim((string) preg_replace('/[^a-z0-9]+/i', '_', strtolower($collectionName)), '_');
+
+        return 'collection_'.($slug !== '' ? $slug : 'items').'_'.substr(hash('sha256', $collectionName), 0, 8);
+    }
+
+    private function findCollectionBySourceName(string $sourceName, string $context): ?DataCollectionInterface
+    {
+        foreach ($this->collectionRegistry->forContext($context) as $collection) {
+            if ($this->getCollectionSourceName($collection->getName()) === $sourceName) {
+                return $collection;
+            }
+        }
+
+        return null;
+    }
+
+    /** @return array{valid: bool, value: mixed} */
+    private function resolveCollectionSummaryPlaceholder(
+        DataCollectionInterface $collection,
+        string $path,
+        string $placeholder,
+        DataContext $context,
+    ): array {
+        $result = $this->getCollectionResult($collection, $context);
+        $count = count($result->items);
+        $value = match ($path) {
+            'count' => $count,
+            'total' => $result->total ?? $count,
+            default => null,
+        };
+
+        return $value === null
+            ? $this->invalid(sprintf('MicroSchema: collection summary field "%s" is not declared for placeholder "%s".', $path, $placeholder))
+            : ['valid' => true, 'value' => $value];
+    }
+
+    private function getCollectionResult(
+        DataCollectionInterface $collection,
+        DataContext $context,
+    ): DataCollectionResult {
+        $results = $this->collectionResults[$context] ?? [];
+        $name = $collection->getName();
+
+        if (!isset($results[$name])) {
+            $results[$name] = $collection->getItems($context);
+            $this->collectionResults[$context] = $results;
+        }
+
+        return $results[$name];
     }
 
     /** @param list<DataSourceField> $fields */
