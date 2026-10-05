@@ -52,66 +52,68 @@ watch(dynamicValue, (dynamic) => {
 </script>
 
 <template>
-  <div
-    v-if="dynamicValue"
-    class="input-group"
-  >
-    <input
-      :id="id"
-      type="text"
-      class="form-control"
-      :value="modelValue"
-      :required="required"
-      readonly
+  <div class="microschema-calendar-control">
+    <div
+      v-if="dynamicValue"
+      class="input-group"
     >
-    <button
-      type="button"
-      class="btn btn-outline-secondary"
-      :aria-label="clearLabel"
-      :title="clearLabel"
-      @click="$emit('update:modelValue', '')"
-    >
-      <span class="icon-times" aria-hidden="true" />
-    </button>
-  </div>
-  <div
-    v-else
-    ref="root"
-    class="field-calendar"
-  >
-    <div class="input-group">
       <input
         :id="id"
         type="text"
         class="form-control"
-        :value="displayValue"
-        :data-alt-value="displayValue"
+        :value="modelValue"
         :required="required"
-        autocomplete="off"
-        @blur="updateValue"
-        @change="updateValue"
+        readonly
       >
       <button
-        :id="`${id}_btn`"
         type="button"
-        class="btn btn-primary"
-        :title="calendar.openLabel"
-        :data-inputfield="id"
-        :data-button="`${id}_btn`"
-        :data-date-format="dateFormat"
-        :data-firstday="calendar.firstDay"
-        :data-weekend="calendar.weekend.join(',')"
-        :data-today-btn="calendar.todayButton"
-        :data-week-numbers="calendar.weekNumbers"
-        :data-show-time="showTime ? 1 : 0"
-        :data-show-others="calendar.fillTable"
-        :data-time24="calendar.timeFormat"
-        :data-only-months-nav="calendar.singleHeader"
-        :data-date-type="calendar.calendarType"
+        class="btn btn-outline-secondary"
+        :aria-label="clearLabel"
+        :title="clearLabel"
+        @click="$emit('update:modelValue', '')"
       >
-        <span class="icon-calendar" aria-hidden="true" />
-        <span class="visually-hidden">{{ calendar.openLabel }}</span>
+        <span class="icon-times" aria-hidden="true" />
       </button>
+    </div>
+    <div
+      v-else
+      ref="root"
+      class="field-calendar"
+    >
+      <div class="input-group">
+        <input
+          :id="id"
+          type="text"
+          class="form-control"
+          :value="displayValue"
+          :data-alt-value="displayValue"
+          :required="required"
+          autocomplete="off"
+          @blur="updateValue"
+          @change="updateValue"
+        >
+        <button
+          :id="`${id}_btn`"
+          type="button"
+          class="btn btn-primary"
+          :title="calendar.openLabel"
+          :data-inputfield="id"
+          :data-button="`${id}_btn`"
+          :data-date-format="dateFormat"
+          :data-firstday="calendar.firstDay"
+          :data-weekend="calendar.weekend.join(',')"
+          :data-today-btn="calendar.todayButton"
+          :data-week-numbers="calendar.weekNumbers"
+          :data-show-time="showTime ? 1 : 0"
+          :data-show-others="calendar.fillTable"
+          :data-time24="calendar.timeFormat"
+          :data-only-months-nav="calendar.singleHeader"
+          :data-date-type="calendar.calendarType"
+        >
+          <span class="icon-calendar" aria-hidden="true" />
+          <span class="visually-hidden">{{ calendar.openLabel }}</span>
+        </button>
+      </div>
     </div>
   </div>
 </template>

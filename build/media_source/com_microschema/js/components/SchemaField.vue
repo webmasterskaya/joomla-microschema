@@ -351,7 +351,6 @@ const updateItemCollection = (item, collectionName, index) => {
             v-else-if="isCalendarType(typeDefinition(property, singleItem().type))"
             :id="inputId"
             :key="singleItem().type"
-            class="microschema-calendar-control"
             :calendar="calendar"
             :clear-label="labels.removeItem"
             :model-value="singleItem().data"
@@ -457,7 +456,6 @@ const updateItemCollection = (item, collectionName, index) => {
             v-else-if="isCalendarType(typeDefinition(property, item.type))"
             :id="`${inputId}-${itemKey(item)}`"
             :key="`${itemKey(item)}-${item.type}`"
-            class="microschema-calendar-control"
             :calendar="calendar"
             :clear-label="labels.removeItem"
             :model-value="item.data"
@@ -486,6 +484,15 @@ const updateItemCollection = (item, collectionName, index) => {
             @select="rememberSelection(itemKey(item), $event)"
           >
 
+          <DataSourcePicker
+            v-if="supportsDataSourceTemplate(typeDefinition(property, item.type))"
+            compact
+            :catalog="catalogForItem(item)"
+            :labels="labels"
+            :terminal-types="dataSourceTerminalTypes(typeDefinition(property, item.type))"
+            @insert="insertItemDataSource(item, $event, index)"
+          />
+
           <button
             type="button"
             class="btn btn-outline-danger microschema-remove-item"
@@ -497,14 +504,6 @@ const updateItemCollection = (item, collectionName, index) => {
             <span class="visually-hidden">{{ labels.removeItem }}</span>
           </button>
         </div>
-        <DataSourcePicker
-          v-if="supportsDataSourceTemplate(typeDefinition(property, item.type))"
-          class="mt-2"
-          :catalog="catalogForItem(item)"
-          :labels="labels"
-          :terminal-types="dataSourceTerminalTypes(typeDefinition(property, item.type))"
-          @insert="insertItemDataSource(item, $event, index)"
-        />
         <div
           v-if="unknownPlaceholders(item.data, catalogForItem(item)).length"
           class="form-text text-warning"

@@ -4,6 +4,7 @@ import { filterDataSourceFields } from '../schema-state.js';
 
 const props = defineProps({
   catalog: { type: Object, required: true },
+  compact: { type: Boolean, default: false },
   labels: { type: Object, required: true },
   terminalTypes: { type: Array, default: () => [] },
 });
@@ -80,15 +81,20 @@ const goToFrame = (index) => {
   <div
     v-if="sources.length"
     class="microschema-data-source-picker"
+    :class="{ 'microschema-data-source-picker--compact': compact }"
   >
     <button
       type="button"
       class="btn btn-sm btn-outline-secondary"
+      :aria-label="compact ? labels.insertDataSource : undefined"
       :aria-expanded="expanded"
+      :title="compact ? labels.insertDataSource : undefined"
       @click="toggle"
     >
       <span class="icon-code" aria-hidden="true" />
-      {{ labels.insertDataSource }}
+      <span :class="{ 'microschema-data-source-trigger-label': compact }">
+        {{ labels.insertDataSource }}
+      </span>
     </button>
 
     <div
