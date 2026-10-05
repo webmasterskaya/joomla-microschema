@@ -1,0 +1,10 @@
+{
+    "@import": "./element.php",
+    "icon": "${url:images/icon.svg}",
+    "iconSmall": "${url:images/iconSmall.svg}",
+    "fields": {
+        "name": "${builder.name}",
+        "source": "${builder.source}",
+        "status": "${builder.status}"
+    }
+}

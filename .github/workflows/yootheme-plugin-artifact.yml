@@ -1,0 +1,30 @@
+name: Build YOOtheme Pro plugin
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+jobs:
+  build-release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build Joomla plugin
+        shell: bash
+        env:
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+        run: |
+          VERSION="${RELEASE_TAG#v}"
+          make build-yootheme-plugin VERSION="${VERSION}"
+
+      - name: Attach plugin to release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/plg_system_microschemayootheme.zip
+          fail_on_unmatched_files: true

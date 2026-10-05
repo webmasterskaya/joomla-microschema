@@ -21,7 +21,7 @@ endif
 
 .DEFAULT_GOAL := help
 
-.PHONY: help build rebuild up up-rebuild up-alone down down-orphans restart down-v joomla-connect db-connect cache-clean install install-dev install-node install-php install-php-dev build-node cs-check cs-fix update-version artifact build-package
+.PHONY: help build rebuild up up-rebuild up-alone down down-orphans restart down-v joomla-connect db-connect cache-clean install install-dev install-node install-php install-php-dev build-node cs-check cs-fix update-version artifact build-package update-yootheme-plugin-version artifact-yootheme-plugin build-yootheme-plugin
 
 build: ## Собрать контейнеры
 	$(COMPOSE) build
@@ -118,6 +118,18 @@ artifact: ## Создать установочные ZIP-архивы расши
 	@rm -rf "$(DIST_DIR_ABS)/.pkg_microschema"
 
 build-package: install update-version build-node artifact ## Собрать релизные архивы
+
+update-yootheme-plugin-version: ## Установить версию плагина YOOtheme Pro
+	@echo "Setting YOOtheme Pro plugin version to: $(CURRENT_VERSION)"
+	@$(SED_INPLACE) -E 's#<version>[0-9A-Za-z_.-]+#<version>$(CURRENT_VERSION)#' \
+		./plg_system_microschemayootheme/microschemayootheme.xml
+
+artifact-yootheme-plugin: ## Создать установочный ZIP-архив плагина YOOtheme Pro
+	@mkdir -p "$(DIST_DIR_ABS)"
+	@rm -f "$(DIST_DIR_ABS)/plg_system_microschemayootheme.zip"
+	@cd ./plg_system_microschemayootheme && zip -qr "$(DIST_DIR_ABS)/plg_system_microschemayootheme.zip" .
+
+build-yootheme-plugin: update-yootheme-plugin-version artifact-yootheme-plugin ## Собрать плагин YOOtheme Pro
 
 help: ## Показать доступные команды
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' "$(firstword $(MAKEFILE_LIST))" | sort | \

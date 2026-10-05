@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="plugin" group="system" method="upgrade">
+    <name>plg_system_microschemayootheme</name>
+    <version>0.1.0</version>
+    <description>PLG_SYSTEM_MICROSCHEMAYOOTHEME_XML_DESCRIPTION</description>
+    <namespace path="src">Joomla\Plugin\System\MicroschemaYootheme</namespace>
+    <files>
+        <folder plugin="microschemayootheme">services</folder>
+        <folder>src</folder>
+        <folder>elements</folder>
+        <filename>bootstrap.php</filename>
+    </files>
+    <languages folder="language">
+        <language tag="en-GB">en-GB/plg_system_microschemayootheme.ini</language>
+        <language tag="en-GB">en-GB/plg_system_microschemayootheme.sys.ini</language>
+        <language tag="ru-RU">ru-RU/plg_system_microschemayootheme.ini</language>
+        <language tag="ru-RU">ru-RU/plg_system_microschemayootheme.sys.ini</language>
+    </languages>
+</extension>

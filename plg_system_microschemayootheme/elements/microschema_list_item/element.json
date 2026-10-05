@@ -1,0 +1,7 @@
+{
+    "@import": "./element.php",
+    "fields": {
+        "source": "${builder.source}",
+        "status": "${builder.statusItem}"
+    }
+}
