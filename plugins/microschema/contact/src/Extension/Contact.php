@@ -143,7 +143,7 @@ final class Contact extends CMSPlugin implements SubscriberInterface, Dispatcher
             $settings['page_schema_properties'] ?? [],
             new DataContext($context, $menuItemId, $item),
         );
-        $builder = new SchemaDataBuilder(array_keys($component->getMetadataRegistry()->getSchemaOrg()));
+        $builder = new SchemaDataBuilder($component->getMetadataRegistry()->getSchemaOrg());
         $schema = $builder->build($schemaType, $properties);
 
         if (count($schema) < 2) {
@@ -230,7 +230,7 @@ final class Contact extends CMSPlugin implements SubscriberInterface, Dispatcher
             $settings['schema_properties'] ?? [],
             $dataContext,
         );
-        $builder = new SchemaDataBuilder(array_keys($component->getMetadataRegistry()->getSchemaOrg()));
+        $builder = new SchemaDataBuilder($component->getMetadataRegistry()->getSchemaOrg());
         $schema = $builder->build($schemaType, $properties);
 
         if (count($schema) < 2) {
@@ -310,7 +310,7 @@ final class Contact extends CMSPlugin implements SubscriberInterface, Dispatcher
             $settings['schema_properties'] ?? [],
             $dataContext,
         );
-        $builder = new SchemaDataBuilder(array_keys($component->getMetadataRegistry()->getSchemaOrg()));
+        $builder = new SchemaDataBuilder($component->getMetadataRegistry()->getSchemaOrg());
         $schema = $builder->build($schemaType, $properties);
 
         if (count($schema) < 2) {

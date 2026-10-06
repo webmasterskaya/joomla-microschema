@@ -25,7 +25,7 @@ final class MicroschemaHelper
             return;
         }
 
-        $builder = new SchemaDataBuilder(array_keys($component->getMetadataRegistry()->getSchemaOrg()));
+        $builder = new SchemaDataBuilder($component->getMetadataRegistry()->getSchemaOrg());
         $schema = $builder->build($schemaType, $params->get('schema_properties', []));
 
         if ($schema === []) {
