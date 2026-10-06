@@ -32,6 +32,8 @@ namespace Joomla\CMS\Router {
 namespace Joomla\Registry {
     final class Registry
     {
+        public int $magicReads = 0;
+
         /** @param array<string, mixed> $values */
         public function __construct(private readonly array $values = [])
         {
@@ -40,6 +42,13 @@ namespace Joomla\Registry {
         public function get(string $key, mixed $default = null): mixed
         {
             return $this->values[$key] ?? $default;
+        }
+
+        public function __get(string $key): mixed
+        {
+            ++$this->magicReads;
+
+            return $this->values[$key] ?? null;
         }
     }
 }
@@ -176,6 +185,15 @@ namespace {
 
     $emptyImageItem = ['id' => 1, 'params' => ['menu_image' => '-1']];
     assertMenuItemSame(null, $type->resolve($emptyImageItem, 'menu_image', $context), 'The Joomla no-image sentinel must resolve as empty.');
+
+    $registryParams = new Registry(['page_heading' => 'Registry heading']);
+    $registryItem = new Registry(['id' => 77, 'title' => 'Registry item', 'params' => $registryParams]);
+    assertMenuItemSame('Registry item', $type->resolve($registryItem, 'title', $context), 'Registry menu item fields must resolve through Registry::get().');
+    assertMenuItemSame(null, $type->resolve($registryItem, 'alias', $context), 'A missing Registry menu item field must resolve to null.');
+    assertMenuItemSame('Registry heading', $type->resolve($registryItem, 'page_heading', $context), 'Registry menu parameters must resolve through Registry::get().');
+    assertMenuItemSame(null, $type->resolve($registryItem, 'parent', $context), 'A missing Registry menu parent must resolve to null.');
+    assertMenuItemSame(0, $registryItem->magicReads, 'Menu item resolution must not invoke Registry::__get().');
+    assertMenuItemSame(0, $registryParams->magicReads, 'Menu parameter resolution must not invoke Registry::__get().');
 
     $menu->active = null;
     assertMenuItemSame($fallback, $source->getValue($context), 'The source must fall back to the request Itemid.');

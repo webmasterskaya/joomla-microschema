@@ -12,11 +12,36 @@ namespace Joomla\CMS\Language {
     }
 }
 
+namespace Joomla\Registry {
+    final class Registry
+    {
+        public int $magicReads = 0;
+
+        /** @param array<string, mixed> $values */
+        public function __construct(private readonly array $values = [])
+        {
+        }
+
+        public function get(string $key, mixed $default = null): mixed
+        {
+            return $this->values[$key] ?? $default;
+        }
+
+        public function __get(string $key): mixed
+        {
+            ++$this->magicReads;
+
+            return $this->values[$key] ?? null;
+        }
+    }
+}
+
 namespace {
     use Joomla\Component\Microschema\Administrator\DataSource\ContextualDataValue;
     use Joomla\Component\Microschema\Administrator\DataSource\DataContext;
     use Joomla\Plugin\System\Microschema\DataSource\CategoryDataSource;
     use Joomla\Plugin\System\Microschema\DataType\JoomlaCategoryDataType;
+    use Joomla\Registry\Registry;
 
     require_once __DIR__ . '/../../../com_microschema/administrator/src/DataSource/ContextualDataValue.php';
     require_once __DIR__ . '/../../../com_microschema/administrator/src/DataSource/DataContext.php';
@@ -68,6 +93,13 @@ namespace {
     assertCategoryTypeSame(true, $source->supportsContext('com_contact.categories'), 'Contact categories must be supported.');
     assertCategoryTypeSame(false, $source->supportsContext('com_content.article'), 'Non-category contexts must be rejected.');
     assertCategoryTypeSame($value, $source->getValue(new DataContext('com_content.categories', 7, $value)), 'Existing contextual category values must retain their overrides.');
+
+    $registryCategory = new Registry(['title' => 'Registry category']);
+    $registryValue = new ContextualDataValue('com_content.categories', 8, $registryCategory);
+    assertCategoryTypeSame('Registry category', $type->resolve($registryValue, 'title', $context), 'Registry category fields must resolve through Registry::get().');
+    assertCategoryTypeSame(null, $type->resolve($registryValue, 'description', $context), 'A missing Registry category field must resolve to null.');
+    assertCategoryTypeSame(null, $type->resolve($registryValue, 'parent', $context), 'A missing Registry category parent must resolve to null.');
+    assertCategoryTypeSame(0, $registryCategory->magicReads, 'Category resolution must not invoke Registry::__get().');
 
     echo "Joomla category data type tests passed.\n";
 }

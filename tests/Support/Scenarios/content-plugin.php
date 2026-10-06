@@ -291,6 +291,8 @@ namespace Joomla\CMS\Extension {
 namespace Joomla\Registry {
     class Registry
     {
+        public int $magicReads = 0;
+
         public function __construct(private readonly array $data = [])
         {
         }
@@ -303,6 +305,13 @@ namespace Joomla\Registry {
         public function get(string $key, mixed $default = null): mixed
         {
             return $this->data[$key] ?? $default;
+        }
+
+        public function __get(string $key): mixed
+        {
+            ++$this->magicReads;
+
+            return $this->data[$key] ?? null;
         }
     }
 }
@@ -556,6 +565,7 @@ namespace {
     use Joomla\Plugin\Microschema\Content\DataType\ArticleDataType;
     use Joomla\Plugin\Microschema\Content\DataType\ArticleImagesDataType;
     use Joomla\Plugin\Microschema\Content\Extension\Content;
+    use Joomla\Registry\Registry;
 
     define('_JEXEC', 1);
 
@@ -1103,6 +1113,14 @@ namespace {
         $imagesType->resolve($articleType->resolve($articleValue, 'images', $articleContext), 'image_intro', $articleContext),
         'The image type must resolve its own field.',
     );
+
+    $registryArticle = new Registry(['title' => 'Registry article']);
+    $registryValue = new ContextualDataValue('com_content.article', 42, $registryArticle);
+    assertContentPluginSame('Registry article', $articleType->resolve($registryValue, 'title', $articleContext), 'Registry article fields must resolve through Registry::get().');
+    assertContentPluginSame(null, $articleType->resolve($registryValue, 'author', $articleContext), 'A missing Registry article author must resolve to null.');
+    assertContentPluginSame(null, $articleType->resolve($registryValue, 'category', $articleContext), 'A missing Registry article category must resolve to null.');
+    assertContentPluginSame(null, $articleType->resolve($registryValue, 'images', $articleContext), 'Missing Registry article images must resolve to null.');
+    assertContentPluginSame(0, $registryArticle->magicReads, 'Article resolution must not invoke Registry::__get().');
 
     $unsupportedContext = new DataContext('com_contact.contact', 1, ['title' => 'Contact']);
 

@@ -9,6 +9,7 @@ use Joomla\Component\Microschema\Administrator\DataSource\ContextualDataValue;
 use Joomla\Component\Microschema\Administrator\DataSource\DataContext;
 use Joomla\Component\Microschema\Administrator\DataSource\DataSourceField;
 use Joomla\Component\Microschema\Administrator\DataSource\DataTypeInterface;
+use Joomla\Registry\Registry;
 
 final class JoomlaUserDataType implements DataTypeInterface
 {
@@ -72,6 +73,10 @@ final class JoomlaUserDataType implements DataTypeInterface
     {
         if (is_array($value)) {
             return $value[$field] ?? null;
+        }
+
+        if ($value instanceof Registry) {
+            return $value->get($field);
         }
 
         return is_object($value) ? ($value->{$field} ?? null) : null;
