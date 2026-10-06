@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type="plugin" group="microschema" method="upgrade">
     <name>plg_microschema_contact</name>
-    <version>0.1.0</version>
+    <version>1.0.0</version>
     <description>PLG_MICROSCHEMA_CONTACT_XML_DESCRIPTION</description>
     <namespace path="src">Joomla\Plugin\Microschema\Contact</namespace>
     <files>
