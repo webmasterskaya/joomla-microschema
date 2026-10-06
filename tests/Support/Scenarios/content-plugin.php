@@ -1053,6 +1053,7 @@ namespace {
         item: (object) [
             'title'  => 'Article title',
             'images' => '{"image_intro":"images/intro.jpg","image_fulltext":"images/full.jpg"}',
+            'tags'   => [(object) ['title' => 'Joomla'], (object) ['title' => 'Schema.org']],
         ],
     );
     assertContentPluginSame('article', $articleSource->getName(), 'The article source name must be stable.');
@@ -1091,10 +1092,16 @@ namespace {
     assertContentPluginSame('JoomlaCategory', $fieldsByName['category']->type ?? null, 'The category must reference the shared category type.');
     assertContentPluginSame('JoomlaArticleImages', $fieldsByName['images']->type ?? null, 'Images must reference their own type.');
     assertContentPluginSame('JoomlaCustomFields', $fieldsByName['fields']->type ?? null, 'Custom fields must belong to the article object.');
+    assertContentPluginSame('List', $fieldsByName['tags']->type ?? null, 'Article tags must be exposed as a list.');
     assertContentPluginSame(
         'Article title',
         $articleType->resolve($articleValue, 'title', $articleContext),
         'The article type must resolve only its own direct field.',
+    );
+    assertContentPluginSame(
+        ['Joomla', 'Schema.org'],
+        $articleType->resolve($articleValue, 'tags', $articleContext),
+        'The article type must resolve tag titles.',
     );
     $imagesType = $dataTypesEvent->types[1];
     assertContentPluginSame(ArticleImagesDataType::class, $imagesType::class, 'The image type must be registered independently.');

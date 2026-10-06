@@ -3,6 +3,7 @@
 namespace Joomla\Plugin\Microschema\Content\DataType;
 
 use Joomla\CMS\Categories\Categories;
+use Joomla\CMS\Helper\TagsHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 use Joomla\Component\Content\Site\Helper\RouteHelper;
@@ -34,6 +35,7 @@ final class ArticleDataType implements DataTypeInterface
             new DataSourceField('category', Text::_('PLG_MICROSCHEMA_CONTENT_DATA_FIELD_CATEGORY'), 'JoomlaCategory'),
             new DataSourceField('images', Text::_('PLG_MICROSCHEMA_CONTENT_DATA_FIELD_IMAGES'), 'JoomlaArticleImages'),
             new DataSourceField('fields', Text::_('PLG_MICROSCHEMA_CONTENT_DATA_FIELD_CUSTOM_FIELDS'), 'JoomlaCustomFields'),
+            new DataSourceField('tags', Text::_('PLG_MICROSCHEMA_CONTENT_DATA_FIELD_TAGS'), 'List'),
             new DataSourceField('hits', Text::_('PLG_MICROSCHEMA_CONTENT_DATA_FIELD_HITS'), 'Integer'),
             new DataSourceField('alias', Text::_('PLG_MICROSCHEMA_CONTENT_DATA_FIELD_ALIAS')),
             new DataSourceField('id', Text::_('PLG_MICROSCHEMA_CONTENT_DATA_FIELD_ID'), 'Integer'),
@@ -53,8 +55,54 @@ final class ArticleDataType implements DataTypeInterface
             'category' => $this->category($value),
             'fields' => $value,
             'images' => $this->read($value->value, 'images'),
+            'tags' => $this->tags($value),
             default => $this->read($value->value, $field),
         };
+    }
+
+    /** @return list<string> */
+    private function tags(ContextualDataValue $value): array
+    {
+        $article = $value->value;
+        $id = (int) ($this->read($article, 'id') ?? $value->itemId);
+
+        if ($id < 1) {
+            return [];
+        }
+
+        $tags = $this->read($article, 'tags');
+        $items = $tags instanceof TagsHelper ? $tags->itemTags : $tags;
+        $titles = $this->tagTitles($items);
+
+        if ($titles !== []) {
+            return $titles;
+        }
+
+        return $this->tagTitles((new TagsHelper())->getItemTags('com_content.article', $id));
+    }
+
+    /** @return list<string> */
+    private function tagTitles(mixed $items): array
+    {
+        if (!is_iterable($items)) {
+            return [];
+        }
+
+        $titles = [];
+
+        foreach ($items as $item) {
+            if (!is_object($item) && !is_array($item)) {
+                continue;
+            }
+
+            $title = trim((string) ($this->read($item, 'title') ?? ''));
+
+            if ($title !== '') {
+                $titles[] = $title;
+            }
+        }
+
+        return array_values(array_unique($titles));
     }
 
     private function content(object|array $article): ?string

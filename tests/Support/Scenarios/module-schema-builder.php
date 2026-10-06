@@ -59,6 +59,12 @@ $schema = $builder->build('Article', [
             'data' => '',
         ],
     ],
+    'keywords' => [
+        [
+            'type' => 'string',
+            'data' => ['Joomla', 'Schema.org'],
+        ],
+    ],
     'commentCount' => 0,
     'isAccessibleForFree' => false,
     'description' => '',
@@ -91,6 +97,11 @@ assertModuleSchemaSame(
     ],
     $schema['image'],
     'Repeatable typed values must become a filtered list.',
+);
+assertModuleSchemaSame(
+    ['Joomla', 'Schema.org'],
+    $schema['keywords'],
+    'A list-valued data source must expand into a repeatable scalar property.',
 );
 assertModuleSchemaSame(0, $schema['commentCount'], 'Integer zero must be preserved.');
 assertModuleSchemaSame(false, $schema['isAccessibleForFree'], 'Boolean false must be preserved.');
