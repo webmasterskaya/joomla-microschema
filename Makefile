@@ -94,7 +94,7 @@ cs-check: ## Проверить форматирование PHP-кода
 cs-fix: ## Исправить форматирование PHP-кода
 	@$(PHP_CS_FIXER) fix
 
-update-version: ## Установить версию в манифестах расширений
+update-version: ## Установить версию в манифестах расширений и Web Asset Manager
 	@echo "Setting version to: $(CURRENT_VERSION)"
 	@$(SED_INPLACE) -E 's#<version>[0-9A-Za-z_.-]+#<version>$(CURRENT_VERSION)#' \
 		./com_microschema/microschema.xml \
@@ -103,6 +103,8 @@ update-version: ## Установить версию в манифестах р�
 		./plugins/microschema/content/content.xml \
 		./plugins/microschema/contact/contact.xml \
 		./pkg_microschema.xml
+	@$(SED_INPLACE) -E 's#"version": "[0-9A-Za-z_.-]+"#"version": "$(CURRENT_VERSION)"#g' \
+		./com_microschema/media/joomla.asset.json
 
 artifact: ## Создать установочные ZIP-архивы расширений
 	@mkdir -p "$(DIST_DIR_ABS)"
