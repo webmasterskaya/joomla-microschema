@@ -51,6 +51,7 @@ final class ArticleDataType implements DataTypeInterface
 
         return match ($field) {
             'content' => $this->content($value->value),
+            'introtext', 'fulltext' => $this->plainText((string) ($this->read($value->value, $field) ?? '')),
             'link' => $this->link($value->value),
             'author' => $this->author($value),
             'category' => $this->category($value),
@@ -110,7 +111,33 @@ final class ArticleDataType implements DataTypeInterface
     {
         $intro = (string) ($this->read($article, 'introtext') ?? '');
         $full = (string) ($this->read($article, 'fulltext') ?? '');
-        $value = trim($intro.($intro !== '' && $full !== '' ? ' ' : '').$full);
+
+        return $this->plainText($intro.($intro !== '' && $full !== '' ? ' ' : '').$full);
+    }
+
+    private function plainText(string $value): ?string
+    {
+        $normalized = preg_replace(
+            [
+                '#<(script|style)\b[^>]*>.*?</\1\s*>#is',
+                '#<(?:br\b[^>]*|/?(?:address|article|aside|blockquote|div|dl|dt|dd|fieldset|figcaption|figure|footer|form|h[1-6]|header|hr|li|main|nav|ol|p|pre|section|table|tbody|td|tfoot|th|thead|tr|ul)\b[^>]*)>#i',
+            ],
+            ' ',
+            $value,
+        );
+
+        if ($normalized !== null) {
+            $value = $normalized;
+        }
+
+        $value = html_entity_decode(strip_tags($value), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        $normalized = preg_replace('/[\s\x{00A0}]+/u', ' ', $value);
+
+        if ($normalized !== null) {
+            $value = $normalized;
+        }
+
+        $value = trim($value);
 
         return $value === '' ? null : $value;
     }
