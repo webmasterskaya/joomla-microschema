@@ -1108,6 +1108,40 @@ namespace {
         $articleType->resolve($articleValue, 'title', $articleContext),
         'The article type must resolve only its own direct field.',
     );
+    $articleContentContext = new DataContext(
+        context: 'com_content.article',
+        itemId: 43,
+        item: (object) [
+            'introtext' => '<p>First&nbsp;paragraph<br>Second <strong>part</strong></p><script>alert("ignored")</script>',
+            'fulltext'  => '<h2>Heading</h2><p>Full text</p><style>.ignored { color: red; }</style>',
+        ],
+    );
+    $articleContentValue = $articleSource->getValue($articleContentContext);
+    assertContentPluginSame(
+        'First paragraph Second part Heading Full text',
+        $articleType->resolve($articleContentValue, 'content', $articleContentContext),
+        'Combined article content must resolve to plain text with structural whitespace preserved.',
+    );
+    assertContentPluginSame(
+        'First paragraph Second part',
+        $articleType->resolve($articleContentValue, 'introtext', $articleContentContext),
+        'Article intro text must resolve without HTML markup or non-visible script content.',
+    );
+    assertContentPluginSame(
+        'Heading Full text',
+        $articleType->resolve($articleContentValue, 'fulltext', $articleContentContext),
+        'Article full text must resolve without HTML markup or non-visible style content.',
+    );
+    $emptyArticleContext = new DataContext(
+        context: 'com_content.article',
+        itemId: 44,
+        item: (object) ['introtext' => '<p> </p>', 'fulltext' => ''],
+    );
+    assertContentPluginSame(
+        null,
+        $articleType->resolve($articleSource->getValue($emptyArticleContext), 'content', $emptyArticleContext),
+        'Article content containing only markup and whitespace must resolve to null.',
+    );
     assertContentPluginSame(
         ['Joomla', 'Schema.org'],
         $articleType->resolve($articleValue, 'tags', $articleContext),
