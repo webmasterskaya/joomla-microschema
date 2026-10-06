@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type="component" method="upgrade">
     <name>com_microschema</name>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <description>COM_MICROSCHEMA_XML_DESCRIPTION</description>
     <namespace path="src">Joomla\Component\Microschema</namespace>
     <administration>
