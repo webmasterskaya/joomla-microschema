@@ -41,6 +41,7 @@ namespace {
     use Joomla\Plugin\Microschema\Contact\DataCollection\MenuContactsCollection;
     use Joomla\Plugin\Microschema\Contact\DataType\ContactDataType;
     use Joomla\Plugin\Microschema\Contact\Extension\Contact;
+    use Joomla\Registry\Registry;
 
     require_once __DIR__ . '/../../../plugins/microschema/contact/src/DataCollection/CategoryContactsCollection.php';
     require_once __DIR__ . '/../../../plugins/microschema/contact/src/DataCollection/MenuCategoriesCollection.php';
@@ -421,6 +422,13 @@ namespace {
     assertContactPluginSame('com_users.user', $user->context ?? null, 'The linked user must carry its own Joomla context.');
     assertContactPluginSame(19, $user->itemId ?? null, 'The linked user must retain its user id.');
     assertContactPluginSame($value, $type->resolve($value, 'fields', $context), 'Contact custom fields must retain the contact context.');
+
+    $registryContact = new Registry(['name' => 'Registry contact']);
+    $registryValue = new ContextualDataValue('com_contact.contact', 7, $registryContact);
+    assertContactPluginSame('Registry contact', $type->resolve($registryValue, 'name', $context), 'Registry contact fields must resolve through Registry::get().');
+    assertContactPluginSame(null, $type->resolve($registryValue, 'user', $context), 'A missing Registry contact user must resolve to null.');
+    assertContactPluginSame(null, $type->resolve($registryValue, 'category', $context), 'A missing Registry contact category must resolve to null.');
+    assertContactPluginSame(0, $registryContact->magicReads, 'Contact resolution must not invoke Registry::__get().');
 
     Categories::$category = (object) ['id' => 3, 'title' => 'Team', 'language' => '*'];
     $category = $type->resolve($value, 'category', $context);

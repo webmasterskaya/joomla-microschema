@@ -32,12 +32,37 @@ namespace Joomla\CMS\User {
     }
 }
 
+namespace Joomla\Registry {
+    final class Registry
+    {
+        public int $magicReads = 0;
+
+        /** @param array<string, mixed> $values */
+        public function __construct(private readonly array $values = [])
+        {
+        }
+
+        public function get(string $key, mixed $default = null): mixed
+        {
+            return $this->values[$key] ?? $default;
+        }
+
+        public function __get(string $key): mixed
+        {
+            ++$this->magicReads;
+
+            return $this->values[$key] ?? null;
+        }
+    }
+}
+
 namespace {
     use Joomla\CMS\User\User;
     use Joomla\CMS\User\UserFactoryInterface;
     use Joomla\Component\Microschema\Administrator\DataSource\DataContext;
     use Joomla\Component\Microschema\Administrator\DataSource\ContextualDataValue;
     use Joomla\Plugin\System\Microschema\DataType\JoomlaUserDataType;
+    use Joomla\Registry\Registry;
 
     require_once __DIR__ . '/../../../com_microschema/administrator/src/DataSource/DataContext.php';
     require_once __DIR__ . '/../../../com_microschema/administrator/src/DataSource/ContextualDataValue.php';
@@ -74,6 +99,12 @@ namespace {
         $type->getFields($contextualUser, $context)[6]->type ?? null,
         'The user type must expose contextual custom fields.',
     );
+
+    $registryUser = new Registry(['id' => 9, 'name' => 'Registry name']);
+    assertUserDataTypeSame('Registry name', $type->resolve($registryUser, 'name', $context), 'Registry user fields must resolve through Registry::get().');
+    assertUserDataTypeSame('ada', $type->resolve($registryUser, 'username', $context), 'A missing Registry user field must fall back to the loaded user.');
+    assertUserDataTypeSame(null, $type->resolve(new Registry(), 'name', $context), 'A Registry without a user id must resolve to null.');
+    assertUserDataTypeSame(0, $registryUser->magicReads, 'User resolution must not invoke Registry::__get().');
 
     echo "Joomla user data type tests passed.\n";
 }

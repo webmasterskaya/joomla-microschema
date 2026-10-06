@@ -7,6 +7,7 @@ use Joomla\Component\Microschema\Administrator\DataSource\ContextualDataValue;
 use Joomla\Component\Microschema\Administrator\DataSource\DataContext;
 use Joomla\Component\Microschema\Administrator\DataSource\DataSourceField;
 use Joomla\Component\Microschema\Administrator\DataSource\DataTypeInterface;
+use Joomla\Registry\Registry;
 
 final class CustomFieldsDataType implements DataTypeInterface
 {
@@ -72,6 +73,10 @@ final class CustomFieldsDataType implements DataTypeInterface
 
     private function read(object|array $field, string $property, mixed $default = null): mixed
     {
+        if ($field instanceof Registry) {
+            return $field->get($property, $default);
+        }
+
         return is_array($field) ? ($field[$property] ?? $default) : ($field->{$property} ?? $default);
     }
 

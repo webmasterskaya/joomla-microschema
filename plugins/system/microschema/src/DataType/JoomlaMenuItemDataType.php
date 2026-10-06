@@ -100,6 +100,10 @@ final class JoomlaMenuItemDataType implements DataTypeInterface
             return $value[$field] ?? null;
         }
 
+        if ($value instanceof Registry) {
+            return $value->get($field);
+        }
+
         return is_object($value) ? ($value->{$field} ?? null) : null;
     }
 }

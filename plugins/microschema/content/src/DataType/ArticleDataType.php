@@ -10,6 +10,7 @@ use Joomla\Component\Microschema\Administrator\DataSource\ContextualDataValue;
 use Joomla\Component\Microschema\Administrator\DataSource\DataContext;
 use Joomla\Component\Microschema\Administrator\DataSource\DataSourceField;
 use Joomla\Component\Microschema\Administrator\DataSource\DataTypeInterface;
+use Joomla\Registry\Registry;
 
 final class ArticleDataType implements DataTypeInterface
 {
@@ -129,6 +130,10 @@ final class ArticleDataType implements DataTypeInterface
 
     private function read(object|array $value, string $field): mixed
     {
+        if ($value instanceof Registry) {
+            return $value->get($field);
+        }
+
         return is_array($value) ? ($value[$field] ?? null) : ($value->{$field} ?? null);
     }
 }
