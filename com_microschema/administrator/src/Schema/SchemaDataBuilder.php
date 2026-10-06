@@ -75,10 +75,20 @@ final class SchemaDataBuilder
             $result = [];
 
             foreach ($value as $item) {
-                $normalized = $this->normalizeTypedValue($this->toArray($item));
+                $typedValue = $this->toArray($item);
+                $normalized = $this->normalizeTypedValue($typedValue);
 
                 if (!$this->isEmpty($normalized)) {
-                    $result[] = $normalized;
+                    $type = trim((string) ($typedValue['type'] ?? ''));
+
+                    if (is_array($normalized)
+                        && array_is_list($normalized)
+                        && $type !== self::REFERENCE_TYPE
+                        && !isset($this->objectTypes[$type])) {
+                        array_push($result, ...$normalized);
+                    } else {
+                        $result[] = $normalized;
+                    }
                 }
             }
 
