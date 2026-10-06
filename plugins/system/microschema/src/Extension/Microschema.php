@@ -193,7 +193,7 @@ final class Microschema extends CMSPlugin implements SubscriberInterface, Dispat
     private function addGlobalSchemas(MicroschemaComponent $component, Registry $params): void
     {
         $collector = $component->getSchemaCollector();
-        $builder = new SchemaDataBuilder(array_keys($component->getMetadataRegistry()->getSchemaOrg()));
+        $builder = new SchemaDataBuilder($component->getMetadataRegistry()->getSchemaOrg());
 
         foreach ([
             'Organization' => ['enabled' => 'organization_enabled', 'properties' => 'organization_properties'],

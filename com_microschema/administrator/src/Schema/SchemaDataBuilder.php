@@ -2,6 +2,9 @@
 
 namespace Joomla\Component\Microschema\Administrator\Schema;
 
+use Joomla\Component\Microschema\Administrator\Metadata\DescriptorInterface;
+use Joomla\Component\Microschema\Administrator\Metadata\PropertyDefinition;
+
 final class SchemaDataBuilder
 {
     private const REFERENCE_TYPE = '@id';
@@ -9,10 +12,27 @@ final class SchemaDataBuilder
     /** @var array<string, true> */
     private array $objectTypes;
 
-    /** @param list<string> $objectTypes */
-    public function __construct(array $objectTypes)
+    /** @var array<string, array<string, PropertyDefinition>> */
+    private array $properties = [];
+
+    /**
+     * @param list<string>|array<string, class-string<DescriptorInterface>> $schemas
+     */
+    public function __construct(array $schemas)
     {
-        $this->objectTypes = array_fill_keys($objectTypes, true);
+        $this->objectTypes = array_fill_keys(array_is_list($schemas) ? $schemas : array_keys($schemas), true);
+
+        if (array_is_list($schemas)) {
+            return;
+        }
+
+        foreach ($schemas as $schemaType => $descriptorClass) {
+            $descriptor = new $descriptorClass();
+
+            foreach ($descriptor->getProperties() as $property) {
+                $this->properties[$schemaType][$property->name] = $property;
+            }
+        }
     }
 
     /** @return array<string, mixed> */
@@ -24,11 +44,10 @@ final class SchemaDataBuilder
             return [];
         }
 
-        $properties = $this->toArray($properties);
         $schema = ['@type' => $schemaType];
 
-        foreach ($properties as $name => $value) {
-            $value = $this->normalize($value);
+        foreach ($this->toArray($properties) as $name => $value) {
+            $value = $this->normalize($value, $this->properties[$schemaType][(string) $name] ?? null);
 
             if (!$this->isEmpty($value)) {
                 $schema[(string) $name] = $value;
@@ -38,14 +57,14 @@ final class SchemaDataBuilder
         return $schema;
     }
 
-    private function normalize(mixed $value): mixed
+    private function normalize(mixed $value, ?PropertyDefinition $property = null): mixed
     {
         if (is_object($value)) {
             $value = get_object_vars($value);
         }
 
         if (!is_array($value)) {
-            return $value;
+            return $this->normalizeScalar($value, $property?->types ?? []);
         }
 
         if ($this->isTypedValue($value)) {
@@ -83,7 +102,13 @@ final class SchemaDataBuilder
     private function normalizeTypedValue(array $value): mixed
     {
         $type = trim((string) ($value['type'] ?? ''));
-        $data = $this->normalize($value['data'] ?? null);
+        $data = $value['data'] ?? null;
+
+        if ($type !== '' && isset($this->properties[$type])) {
+            $data = $this->normalizeObject($type, $this->toArray($data));
+        } else {
+            $data = $this->normalizeScalar($this->normalize($data), [$type]);
+        }
 
         if ($this->isEmpty($data)) {
             return null;
@@ -98,6 +123,48 @@ final class SchemaDataBuilder
         }
 
         return $data;
+    }
+
+    /** @param array<string|int, mixed> $value */
+    private function normalizeObject(string $schemaType, array $value): array
+    {
+        $result = [];
+
+        foreach ($value as $name => $item) {
+            $normalized = $this->normalize($item, $this->properties[$schemaType][(string) $name] ?? null);
+
+            if (!$this->isEmpty($normalized)) {
+                $result[$name] = $normalized;
+            }
+        }
+
+        return $result;
+    }
+
+    /** @param list<string> $types */
+    private function normalizeScalar(mixed $value, array $types): mixed
+    {
+        if (!is_scalar($value) || (is_string($value) && str_contains($value, '{'))) {
+            return $value;
+        }
+
+        if ($types === ['Integer']) {
+            $integer = filter_var($value, FILTER_VALIDATE_INT);
+
+            return $integer !== false ? $integer : $value;
+        }
+
+        if ($types === ['Number'] && is_numeric($value)) {
+            $number = (float) $value;
+
+            return is_finite($number) ? $number : $value;
+        }
+
+        if ($types === ['Boolean'] && !is_bool($value)) {
+            return filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ?? $value;
+        }
+
+        return $value;
     }
 
     /** @param array<string|int, mixed> $value */
