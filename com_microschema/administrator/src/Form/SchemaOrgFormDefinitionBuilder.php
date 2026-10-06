@@ -2,6 +2,7 @@
 
 namespace Joomla\Component\Microschema\Administrator\Form;
 
+use Joomla\CMS\Language\Text;
 use Joomla\Component\Microschema\Administrator\Metadata\DescriptorInterface;
 use Joomla\Component\Microschema\Administrator\Metadata\PropertyDefinition;
 use Joomla\Registry\Registry;
@@ -51,6 +52,7 @@ final class SchemaOrgFormDefinitionBuilder
     private function buildProperty(PropertyDefinition $property): array
     {
         $types = [];
+        $options = [];
 
         foreach ($property->types as $type) {
             $types[] = [
@@ -60,12 +62,20 @@ final class SchemaOrgFormDefinitionBuilder
             ];
         }
 
+        foreach ($property->options as $value => $label) {
+            $options[] = [
+                'value' => $value,
+                'label' => Text::_($label),
+            ];
+        }
+
         return [
             'name' => $property->name,
             'label' => $property->name,
             'description' => implode(', ', $property->types),
             'required' => $property->required,
             'multiple' => $property->multiple,
+            'options' => $options,
             'types' => $types,
         ];
     }

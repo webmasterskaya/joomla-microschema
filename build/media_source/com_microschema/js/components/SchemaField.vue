@@ -242,11 +242,11 @@ const updateItemCollection = (item, collectionName, index) => {
       </div>
 
       <div
-        v-if="removable || (plain && supportsDataSourceTemplate(property.types[0])) || (!plain && !property.multiple && supportsDataSourceTemplate(typeDefinition(property, singleItem().type)))"
+        v-if="removable || (plain && !property.options?.length && supportsDataSourceTemplate(property.types[0])) || (!plain && !property.multiple && supportsDataSourceTemplate(typeDefinition(property, singleItem().type)))"
         class="microschema-field-actions"
       >
         <DataSourcePicker
-          v-if="plain && supportsDataSourceTemplate(property.types[0])"
+          v-if="plain && !property.options?.length && supportsDataSourceTemplate(property.types[0])"
           :catalog="dataSourceCatalog"
           :labels="labels"
           :terminal-types="dataSourceTerminalTypes(property.types[0])"
@@ -272,8 +272,23 @@ const updateItemCollection = (item, collectionName, index) => {
     </div>
 
     <template v-if="plain">
+      <select
+        v-if="property.options?.length"
+        :id="inputId"
+        class="form-select"
+        :value="modelValue ?? ''"
+        :required="property.required"
+        @change="updatePlain"
+      >
+        <option value="" />
+        <option
+          v-for="option in property.options"
+          :key="option.value"
+          :value="option.value"
+        >{{ option.label }}</option>
+      </select>
       <JoomlaCalendarField
-        v-if="isCalendarType(property.types[0])"
+        v-else-if="isCalendarType(property.types[0])"
         :id="inputId"
         :key="property.types[0].input"
         :calendar="calendar"
