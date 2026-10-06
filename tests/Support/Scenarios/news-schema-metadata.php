@@ -99,6 +99,18 @@ if ($webPage['mainEntity']->types !== ['ItemList', 'NewsArticle', 'BlogPosting']
 
 $itemList = newsSchemaProperties(new ItemList());
 
+if ($itemList['itemListOrder']->types !== ['ItemListOrderType']) {
+    throw new RuntimeException('ItemList.itemListOrder must use the ItemListOrderType enumeration.');
+}
+
+if ($itemList['itemListOrder']->options !== [
+    'https://schema.org/ItemListUnordered' => 'COM_MICROSCHEMA_SCHEMA_EDITOR_ITEM_LIST_ORDER_UNORDERED',
+    'https://schema.org/ItemListOrderAscending' => 'COM_MICROSCHEMA_SCHEMA_EDITOR_ITEM_LIST_ORDER_ASCENDING',
+    'https://schema.org/ItemListOrderDescending' => 'COM_MICROSCHEMA_SCHEMA_EDITOR_ITEM_LIST_ORDER_DESCENDING',
+]) {
+    throw new RuntimeException('ItemList.itemListOrder must expose the canonical enumeration values.');
+}
+
 if ($itemList['itemListElement']->types !== ['ListItem'] || !$itemList['itemListElement']->multiple) {
     throw new RuntimeException('ItemList must contain multiple ListItem values.');
 }

@@ -10,7 +10,8 @@ abstract class AbstractDescriptor implements DescriptorInterface
     }
 
     /**
-     * @param list<string> $types
+     * @param list<string>          $types
+     * @param array<string, string> $options language keys indexed by option values
      */
     final protected function property(
         string $name,
@@ -19,7 +20,8 @@ abstract class AbstractDescriptor implements DescriptorInterface
         bool $multiple = false,
         ?string $tag = null,
         bool $automatic = false,
+        array $options = [],
     ): PropertyDefinition {
-        return new PropertyDefinition($name, $types, $required, $multiple, $tag, $automatic);
+        return new PropertyDefinition($name, $types, $required, $multiple, $tag, $automatic, $options);
     }
 }

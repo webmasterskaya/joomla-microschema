@@ -16,6 +16,20 @@ namespace Joomla\Registry {
     }
 }
 
+namespace Joomla\CMS\Language {
+    final class Text
+    {
+        public static function _(string $key): string
+        {
+            return match ($key) {
+                'TEST_ORDER_UNORDERED' => 'Unordered',
+                'TEST_ORDER_ASCENDING' => 'Ascending',
+                default => $key,
+            };
+        }
+    }
+}
+
 namespace {
     use Joomla\Component\Microschema\Administrator\Form\SchemaOrgFormDefinitionBuilder;
     use Joomla\Component\Microschema\Administrator\Metadata\AbstractDescriptor;
@@ -40,6 +54,10 @@ namespace {
                 $this->property('publisher', ['Organization', '@id']),
                 $this->property('datePublished', ['DateTime']),
                 $this->property('dateModified', ['Date']),
+                $this->property('order', ['OrderType'], options: [
+                    'https://example.test/Unordered' => 'TEST_ORDER_UNORDERED',
+                    'https://example.test/Ascending' => 'TEST_ORDER_ASCENDING',
+                ]),
                 $this->property('inLanguage', automatic: true),
             ];
         }
@@ -100,6 +118,19 @@ namespace {
 
     if (($dateModified['types'][0]['input'] ?? null) !== 'calendar-date') {
         throw new RuntimeException('Date values must use the Joomla date calendar.');
+    }
+
+    $order = $definition['schemas']['Article']['properties'][4] ?? null;
+
+    if (($order['description'] ?? null) !== 'OrderType') {
+        throw new RuntimeException('Enumerated properties must expose their Schema.org type.');
+    }
+
+    if (($order['options'] ?? null) !== [
+        ['value' => 'https://example.test/Unordered', 'label' => 'Unordered'],
+        ['value' => 'https://example.test/Ascending', 'label' => 'Ascending'],
+    ]) {
+        throw new RuntimeException('Enumerated properties must expose their translated options.');
     }
 
     echo "Schema.org form definition builder tests passed.\n";
