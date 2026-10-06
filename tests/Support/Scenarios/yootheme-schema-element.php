@@ -147,6 +147,13 @@ assertYoothemeSchemaSame(
     'Generated fields must be converted into Schema.org properties.',
 );
 assertYoothemeSchemaSame(
+    ['keywords' => ['schema.org', 'YOOtheme', 'Structured data']],
+    $fieldBuilder->extractProperties('Article', [
+        $keywordsField => "schema.org || YOOtheme\nStructured data || ",
+    ]),
+    'Multiple scalar values must support both line breaks and the double-pipe separator.',
+);
+assertYoothemeSchemaSame(
     true,
     $fieldBuilder->hasSubmittedFields('Article', [$headlineField => '']),
     'An explicitly cleared generated field must prevent legacy JSON from being restored.',
@@ -239,6 +246,13 @@ assertYoothemeSchemaSame(
     ['author' => [['@id' => '#organisation'], ['@id' => 'https://example.test/person']], 'publisher' => ['@id' => '#publisher']],
     $fieldBuilder->extractProperties('Article', [$authorField => "#organisation\nhttps://example.test/person", $publisherField => '#publisher']),
     'Legacy references must become objects without renaming identifiers.',
+);
+assertYoothemeSchemaSame(
+    ['author' => [['@id' => '#organisation'], ['@id' => 'https://example.test/person'], ['@id' => '#editor']]],
+    $fieldBuilder->extractProperties('Article', [
+        $authorField => "#organisation || https://example.test/person\n#editor || ",
+    ]),
+    'Multiple entity references must support both line breaks and the double-pipe separator.',
 );
 $objectProps = [
     $authorField.'__mode' => 'Person',

@@ -261,7 +261,7 @@ final class SchemaElementFieldBuilder
             if (is_array($value) && !array_is_list($value)) {
                 $value = [$value];
             } elseif (is_string($value)) {
-                $value = preg_split('/\R/u', trim($value)) ?: [];
+                $value = $this->splitMultipleValue($value);
             } elseif (!is_array($value)) {
                 $value = [$value];
             }
@@ -373,8 +373,7 @@ final class SchemaElementFieldBuilder
     {
         if ($property->multiple) {
             if (is_string($value)) {
-                $value = preg_split('/\R/u', trim($value)) ?: [];
-                $value = array_map('trim', $value);
+                $value = $this->splitMultipleValue($value);
             } elseif (!is_array($value)) {
                 $value = $value === null || $value === '' ? [] : [$value];
             }
@@ -399,6 +398,14 @@ final class SchemaElementFieldBuilder
         }
 
         return $value;
+    }
+
+    /** @return list<string> */
+    private function splitMultipleValue(string $value): array
+    {
+        $items = preg_split('/(?:\R+|\h*\|\|\h*)/u', trim($value)) ?: [];
+
+        return array_map('trim', $items);
     }
 
     private function getDescriptor(string $schemaType): ?DescriptorInterface
